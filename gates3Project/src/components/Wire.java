@@ -40,9 +40,6 @@ public class Wire extends Component {
 		if(hovered)
 			g.setColor(new Color(clamp(g.getColor().getRed() + 20, 255), clamp(g.getColor().getGreen() + 20, 255), clamp(g.getColor().getBlue() + 20, 255)));
 		
-		//if(hovered)
-			//g.setColor(new Color(clamp(g.getColor().getRed() + 20, 255), clamp(g.getColor().getGreen() + 20, 255), clamp(g.getColor().getBlue() + 20, 255)));
-		
 		g2d.setStroke(new BasicStroke(w, 1, 1));
 		
 		ArrayList<Spot> loopSpots = new ArrayList<>(spots);
