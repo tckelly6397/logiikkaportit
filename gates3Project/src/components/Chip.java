@@ -16,8 +16,11 @@ public class Chip extends Component {
 	private Environment e;
 	private Spot location;
 	private Color color;
-	private Boolean hovered = false;
 	private Boolean selected = false;
+	private String label = "";
+	
+	private int offsetX = 0;
+	private int offsetY = 0;
 	
 	public int WIDTH = 100;
 	public int HEIGHT = 50;
@@ -37,10 +40,11 @@ public class Chip extends Component {
 		
 		g.setColor(color);
 		
-		if(hovered)
-			g.setColor(Color.RED);
-			//g.setColor(new Color(clamp(g.getColor().getRed() + 20, 255), clamp(g.getColor().getGreen() + 20, 255), clamp(g.getColor().getBlue() + 20, 255)));
-		
+		if(getHovered()) {
+			//g.setColor(Color.RED);
+			g.setColor(new Color(clamp(g.getColor().getRed() + 50, 255), clamp(g.getColor().getGreen() + 50, 255), clamp(g.getColor().getBlue() + 50, 255)));
+		}
+			
 		g.fillRoundRect(x, y, WIDTH, HEIGHT, 15, 15);
 		
 		for(Node n : inputNodes)
@@ -54,10 +58,7 @@ public class Chip extends Component {
 		updateOutput();
 		for(Node n : outputNodes) {
 			Initialize.pw.addNext(n);
-			n.setUsed(true);
 		}
-		
-		setUsed(false);
 	}
 	
 	public void setNodeLocations() {
@@ -88,11 +89,10 @@ public class Chip extends Component {
 		
 		for(int i = 0; i < truth.length; i++) {
 			outputNodes.get(i).setPowered(truth[i]);
-			//outputNodes.get(i).update();
 		}
 	}
 	
-	public Chip getCollision(int x, int y) {
+	public Boolean getCollision(int x, int y) {
 		x -= 10;
 		y -= 30;
 		
@@ -102,9 +102,39 @@ public class Chip extends Component {
 		int y2 = location.getYAsInt() + HEIGHT;
 		
 		if(x > x1 && x < x2 && y > y1 && y < y2)
-			return this;
+			return true;
 		
-		return null;
+		return false;
+	}
+	
+	public static void drag(int x, int y) {
+		for(Chip c : Initialize.e.getChips()) {
+			if(c.getSelected()) {
+				c.translateX(x - c.getX() + c.getOffsetX());
+				c.translateY(y - c.getY() + c.getOffsetY());
+				
+				break;
+			}
+		}
+	}
+	
+	public static void pressed(int x, int y) {
+		for(Chip c : Initialize.e.getChips()) {
+			if(c.getCollision(x, y)) {
+				c.setSelected(true);
+				c.setOffsetX(c.getX() - x);
+				c.setOffsetY(c.getY() - y);
+				break;
+			}		
+		}
+	}
+	
+	public static void mouseReleased() {
+		for(Chip c : Initialize.e.getChips()) {
+			c.setSelected(false);
+			c.setOffsetX(0);
+			c.setOffsetY(0);
+		}
 	}
 
 	public ArrayList<Node> getInputNodes() {
@@ -184,19 +214,35 @@ public class Chip extends Component {
 		this.color = color;
 	}
 
-	public Boolean getHovered() {
-		return hovered;
-	}
-
-	public void setHovered(Boolean hovered) {
-		this.hovered = hovered;
-	}
-
 	public Boolean getSelected() {
 		return selected;
 	}
 
 	public void setSelected(Boolean selected) {
 		this.selected = selected;
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+	public int getOffsetX() {
+		return offsetX;
+	}
+
+	public void setOffsetX(int offsetX) {
+		this.offsetX = offsetX;
+	}
+
+	public int getOffsetY() {
+		return offsetY;
+	}
+
+	public void setOffsetY(int offsetY) {
+		this.offsetY = offsetY;
 	}
 }

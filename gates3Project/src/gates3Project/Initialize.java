@@ -16,7 +16,7 @@ public class Initialize {
 		
 		e = new Environment(1400, 800);
 		
-		for(int i = 0; i < 4; i++) {
+		for(int i = 0; i < 20; i++) {
 			Chip c = new Chip(200, 200, Color.GREEN, e);
 		    TruthTable tb = new TruthTable();
 		    tb.addTruth(new Boolean[]{true}, new Boolean[]{false});

@@ -13,7 +13,6 @@ public class Node extends Component {
 	private int size;
 	private Environment e;
 	private boolean powered;
-	private boolean hovered = false;
 	private ArrayList<Wire> wires = new ArrayList<>();
 	private ArrayList<Wire> inputWires = new ArrayList<>();
 	private boolean clickable;
@@ -50,7 +49,7 @@ public class Node extends Component {
 		if(powered)
 			g.setColor(new Color(255, 0, 0));
 		
-		if(hovered)
+		if(getHovered())
 			g.setColor(new Color(clamp(g.getColor().getRed() + 20, 255), clamp(g.getColor().getGreen() + 20, 255), clamp(g.getColor().getBlue() + 20, 255)));
 			
 		g.fillOval(spot.getXAsInt() - (size / 2), spot.getYAsInt() - (size / 2), size, size);
@@ -59,25 +58,108 @@ public class Node extends Component {
 	public void update() {
 		if(c != null) {
 			Initialize.pw.addNext(c);
-			c.setUsed(true);
 		}
 		
 		for(Wire w : wires) {
 			w.setPowered(powered);
 			Initialize.pw.addNext(w);
-			w.setUsed(true);
 		}
 		
-		setUsed(false);
+		if(c != null && inputWires.isEmpty())
+			powered = false;
 	}
 	
-	public Node getCollision(int x, int y) {
+	public Boolean getCollision(int x, int y) {
 		int distN = (int)Math.abs(Math.sqrt(Math.pow(spot.getXAsInt() - x + 8, 2) + Math.pow(spot.getYAsInt() - y + 30, 2)));
 		if(distN < size - 6)
-			return this;
+			return true;
 		
-		hovered = false;
-	    return null;
+	    return false;
+	}
+	
+	public static ArrayList<Node> getAllNodes() {
+		ArrayList<Node> nodes = new ArrayList<>(Initialize.e.getInputNodes());
+		nodes.addAll(Initialize.e.getOutputNodes());
+		for(Chip c : Initialize.e.getChips()) {
+			nodes.addAll(c.getInputNodes());
+			nodes.addAll(c.getOutputNodes());
+		}
+		
+		return nodes;
+	}
+	
+	public static Node getNodeClick(int x, int y) {
+		Node node = null;
+		
+		for(Node n : getAllNodes()) { 
+			if(n.getCollision(x, y)) {
+				node = n;
+				break;
+			}
+		}
+		
+		return node;
+	}
+	
+	public static void leftClick(int x, int y, Node node) {
+		if(node != null) {
+				if(node.isClickable()) {
+					node.switchPowered();
+					//node.getEnvironment().getPowerThread().setNext(node);
+					Initialize.pw.addNext(node);
+				}
+				
+				//Connect node
+				for(Wire w : Initialize.e.getWires()) {
+					if(w.isSelected()) {
+						if(w.getSpots().size() == 1) {
+							int dist = node.getSpot().getXAsInt() - w.getSpots().get(0).getXAsInt();
+							Spot s1 = new Spot(node.getSpot().getXAsInt() - (dist / 2), w.getSpots().get(0).getYAsInt());
+							Spot s2 = new Spot(node.getSpot().getXAsInt() - (dist / 2), node.getSpot().getYAsInt());
+									
+							w.addSpot(s1);
+							w.addSpot(s2);
+						}
+						else {
+							Spot last = w.getSpots().get(w.getSpots().size() - 1);
+							last = new Spot(last.getX(), node.getSpot().getYAsInt());
+							
+							if(!w.isxAxis())
+								w.getSpots().add(new Spot(last.getX(), last.getY()));
+							
+							w.getSpots().get(w.getSpots().size() - 1).setSpot(last);
+							//	w.addSpot(new Spot(last.getX(), last.getY()));
+						}
+						
+						w.getSpots().add(node.getSpot());
+						w.setTempSpot(null);
+						w.setSelected(false);
+						node.addInputWire(w);
+						w.setOutputNode(node);
+						w.update();
+					}
+				}
+		}
+	}
+	
+	public static void rightClick(int x, int y, Node node) {
+		if(node == null)
+			return;
+
+		Boolean goOn = true;
+		
+		for(Wire w : Initialize.e.getWires()) {
+			if(w.isSelected()) {
+				goOn = false;
+			}
+		}
+		
+		if(goOn) {
+			Wire w = new Wire(node, node.getEnvironment());
+			w.setSelected(true);
+			node.getWires().add(w);
+			Initialize.e.getWires().add(w);
+		}
 	}
 
 	public Spot getSpot() {
@@ -106,14 +188,6 @@ public class Node extends Component {
 	
 	public void switchPowered() {
 		this.powered = !this.powered;
-	}
-
-	public boolean isHovered() {
-		return hovered;
-	}
-
-	public void setHovered(boolean hovered) {
-		this.hovered = hovered;
 	}
 
 	public ArrayList<Wire> getWires() {
@@ -174,7 +248,7 @@ public class Node extends Component {
 
 	@Override
 	public String toString() {
-		return "Node [spot=" + spot + ", size=" + size + ", powered=" + powered + ", hovered=" + hovered + ", wires="
+		return "Node [spot=" + spot + ", size=" + size + ", powered=" + powered + ", wires="
 				+ wires + "]";
 	}
 }

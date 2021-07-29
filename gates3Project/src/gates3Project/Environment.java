@@ -27,6 +27,7 @@ public class Environment extends JPanel {
 	private ArrayList<Node> outputNodes = new ArrayList<>();
 	private ArrayList<Wire> wires = new ArrayList<>();
 	private ArrayList<Chip> chips = new ArrayList<>();
+	//private ArrayList<ChipButton> chipButtons = new ArrayList<>();
 	
 	public void paintComponent(Graphics g) {
 		for(Chip c : chips)
@@ -34,6 +35,11 @@ public class Environment extends JPanel {
 		
 		for(Wire w : wires)
 			w.draw(g);
+		
+		for(Wire w : wires) {
+			if(w.isPowered())
+				w.draw(g);
+		}
 		
 		g.setColor(Color.BLACK);
 		Graphics2D g2d = (Graphics2D)g;

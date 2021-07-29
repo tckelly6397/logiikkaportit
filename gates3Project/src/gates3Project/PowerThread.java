@@ -23,10 +23,10 @@ public class PowerThread implements Runnable {
 			for(int i = size; i >= 0; i--) 
 				nextList.remove(i);
 			
-			System.out.println(nextList);
+			//System.out.println(nextList);
 		
 			try {
-				Thread.sleep(250);
+				Thread.sleep(17);
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 			}

@@ -19,7 +19,6 @@ public class Wire extends Component {
 	private boolean selected = true;
 	private Spot tempSpot = null;
 	private boolean xAxis = true;
-	private boolean hovered = false;
 	
 	public Wire(Node inputNode, Environment e) {
 		this.inputNode = inputNode;
@@ -37,7 +36,7 @@ public class Wire extends Component {
 		if(powered)
 			g.setColor(new Color(255, 0, 0));
 		
-		if(hovered)
+		if(getHovered())
 			g.setColor(new Color(clamp(g.getColor().getRed() + 20, 255), clamp(g.getColor().getGreen() + 20, 255), clamp(g.getColor().getBlue() + 20, 255)));
 		
 		g2d.setStroke(new BasicStroke(w, 1, 1));
@@ -53,6 +52,9 @@ public class Wire extends Component {
 			
 			if(i + 1 == loopSpots.size() - 1 && outputNode != null)
 				s2 = outputNode.getSpot();
+			
+			if(i == 0)
+				s1 = inputNode.getSpot();
 			
 			//Just draw a straight line if there's two spots
 			if(loopSpots.size() < 3) {
@@ -85,13 +87,11 @@ public class Wire extends Component {
 				outputNode.setPowered(powered);
 				Initialize.pw.addNext(outputNode);
 			}
-			outputNode.setUsed(true);
 		}
-		
-		setUsed(false);
 	}
 	
-	public Wire getCollision(int x, int y) {
+	@Override
+	public Boolean getCollision(int x, int y) {
 		y-= 32;
 		x -= 8;
 		
@@ -131,21 +131,68 @@ public class Wire extends Component {
 			if(i + 1 == spots.size() - 1)
 				x2 -= 9;
 			
-			//System.out.println(x + ", " + y + " || " + x1 + ", " + y1 + " || " + x2 + ", " + y2);
-			
 			if(x > x1 && x < x2 && y > y1 && y < y2) {
-				return this;
+				return true;
 			}
 		}
 		
-		//System.out.println("---------------");
+		return false;
+	}
+	
+	public static void updateTempSpot(int x, int y) {
+		ArrayList<Wire> wires = Initialize.e.getWires();
 		
-		return null;
+		//Set position of temporary spot for wires
+		for(Wire w : wires) {
+			if(!w.isSelected())
+				continue;
+			Spot tempSpot = null;
+
+			if(w.isxAxis())
+				tempSpot = new Spot(x - 8, w.getSpots().get(w.getSpots().size() - 1).getYAsInt());
+			else
+				tempSpot = new Spot(w.getSpots().get(w.getSpots().size() - 1).getXAsInt(), y - 27);
+			
+			w.setTempSpot(tempSpot);
+		}
+	}
+	
+	public static void leftClick(int x, int y) {
+		ArrayList<Wire> wires = Initialize.e.getWires();
+		
+		Wire wire = null;
+		for(Wire w : wires) {
+			if(w.getCollision(x, y)) {
+				wire = w;
+				break;
+			}
+		}
+		
+		if(wire != null) {
+			wire.destroy();
+		}
+	}
+	
+	public static void rightClick(int x, int y) {
+		ArrayList<Wire> wires = Initialize.e.getWires();
+		
+		for(Wire w : wires) {
+			if(w.isSelected() && w.getTempSpot() != null) {
+				w.addSpot(new Spot(w.getTempSpot().getXAsInt(), w.getTempSpot().getYAsInt()));
+				w.switchAxis();
+			}
+		}
+		
 	}
 	
 	public void destroy() {
 		inputNode.removeWire(this);
-		outputNode.removeWire(this);
+		outputNode.removeInputWire(this);
+	
+		inputNode.setPowered(false);
+		outputNode.setPowered(false);
+		outputNode.update();
+		
 		this.e.getWires().remove(this);
 	}
 	
@@ -223,14 +270,6 @@ public class Wire extends Component {
 
 	public void setEnvironment(Environment e) {
 		this.e = e;
-	}
-
-	public boolean isHovered() {
-		return hovered;
-	}
-
-	public void setHovered(boolean hovered) {
-		this.hovered = hovered;
 	}
 
 	@Override

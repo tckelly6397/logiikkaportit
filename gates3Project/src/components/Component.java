@@ -1,19 +1,32 @@
 package components;
 
+import java.util.ArrayList;
+
 public abstract class Component {
-	private volatile Boolean used;
 	public abstract void update();
-	
-	public Boolean getUsed() {
-		return used;
-	}
-	
-	public void setUsed(Boolean used) {
-		this.used = used;
-	}
+	public abstract Boolean getCollision(int x, int y);
+	private Boolean hovered = false;
 	
 	public int clamp(int num, int max) {
 		if(num > max) return max;
 		return num;
+	}
+	
+	public static void executeHovered(int x, int y, ArrayList<Component> components) {
+		for(Component c : components) {
+			if(c.getCollision(x, y)) {
+				c.setHovered(true);
+			}
+			else
+				c.setHovered(false);
+		}
+	}
+	
+	public Boolean getHovered() {
+		return hovered;
+	}
+	
+	public void setHovered(Boolean hovered) {
+		this.hovered = hovered;
 	}
 }
