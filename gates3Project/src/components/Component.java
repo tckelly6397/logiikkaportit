@@ -7,7 +7,13 @@ public abstract class Component {
 	public Boolean getUsed() {
 		return used;
 	}
+	
 	public void setUsed(Boolean used) {
 		this.used = used;
+	}
+	
+	public int clamp(int num, int max) {
+		if(num > max) return max;
+		return num;
 	}
 }

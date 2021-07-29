@@ -51,6 +51,9 @@ public class Wire extends Component {
 			Spot s1 = loopSpots.get(i);
 			Spot s2 = loopSpots.get(i + 1);
 			
+			if(i + 1 == loopSpots.size() - 1 && outputNode != null)
+				s2 = outputNode.getSpot();
+			
 			//Just draw a straight line if there's two spots
 			if(loopSpots.size() < 3) {
 				g2d.drawLine(s1.getXAsInt(), s1.getYAsInt(), s2.getXAsInt(), s2.getYAsInt());
@@ -78,19 +81,14 @@ public class Wire extends Component {
 				if(w.isPowered())
 					keepPowered = true;
 			
-			if(!keepPowered || powered)
+			if(!keepPowered || powered) {
 				outputNode.setPowered(powered);
-			
-			Initialize.pw.addNext(outputNode);
+				Initialize.pw.addNext(outputNode);
+			}
 			outputNode.setUsed(true);
 		}
 		
 		setUsed(false);
-	}
-	
-	public int clamp(int num, int max) {
-		if(num > max) return max;
-		return num;
 	}
 	
 	public Wire getCollision(int x, int y) {

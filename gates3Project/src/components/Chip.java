@@ -14,16 +14,16 @@ public class Chip extends Component {
 	private ArrayList<Node> outputNodes = new ArrayList<>();
 	private TruthTable table;
 	private Environment e;
-	private int x;
-	private int y;
+	private Spot location;
 	private Color color;
+	private Boolean hovered = false;
+	private Boolean selected = false;
 	
 	public int WIDTH = 100;
 	public int HEIGHT = 50;
 	
 	public Chip(int x, int y, Color c, Environment e) {
-		this.x = x;
-		this.y = y;
+		this.location = new Spot(x, y);
 		this.color = c;
 		this.table = new TruthTable();
 		this.e = e;
@@ -32,8 +32,16 @@ public class Chip extends Component {
 	}
 	
 	public void draw(Graphics g) {
+		int x = location.getXAsInt();
+		int y = location.getYAsInt();
+		
 		g.setColor(color);
-		g.fillRoundRect(x, y, WIDTH, HEIGHT, 15, 30);
+		
+		if(hovered)
+			g.setColor(Color.RED);
+			//g.setColor(new Color(clamp(g.getColor().getRed() + 20, 255), clamp(g.getColor().getGreen() + 20, 255), clamp(g.getColor().getBlue() + 20, 255)));
+		
+		g.fillRoundRect(x, y, WIDTH, HEIGHT, 15, 15);
 		
 		for(Node n : inputNodes)
 			n.draw(g);
@@ -53,6 +61,9 @@ public class Chip extends Component {
 	}
 	
 	public void setNodeLocations() {
+		int x = location.getXAsInt();
+		int y = location.getYAsInt();
+		
 		for(int i = 0; i < inputNodes.size(); i++) {
 			int defSize = 20;
 			int h = y + (HEIGHT / 2) - ((defSize + 20) * i) + ((defSize + 20) * inputNodes.size() / 2) - ((defSize + 20) / 2);
@@ -77,8 +88,23 @@ public class Chip extends Component {
 		
 		for(int i = 0; i < truth.length; i++) {
 			outputNodes.get(i).setPowered(truth[i]);
-			outputNodes.get(i).update();
+			//outputNodes.get(i).update();
 		}
+	}
+	
+	public Chip getCollision(int x, int y) {
+		x -= 10;
+		y -= 30;
+		
+		int x1 = location.getXAsInt();
+		int y1 = location.getYAsInt();
+		int x2 = location.getXAsInt() + WIDTH;
+		int y2 = location.getYAsInt() + HEIGHT;
+		
+		if(x > x1 && x < x2 && y > y1 && y < y2)
+			return this;
+		
+		return null;
 	}
 
 	public ArrayList<Node> getInputNodes() {
@@ -115,19 +141,31 @@ public class Chip extends Component {
 	}
 
 	public int getX() {
-		return x;
+		return location.getXAsInt();
 	}
 
 	public void setX(int x) {
-		this.x = x;
+		this.location.setX(x);
+		setNodeLocations();
+	}
+	
+	public void translateX(int x) {
+		this.location.setX(this.location.getX() + x);
+		setNodeLocations();
 	}
 
 	public int getY() {
-		return y;
+		return location.getYAsInt();
 	}
 
 	public void setY(int y) {
-		this.y = y;
+		this.location.setY(y);
+		setNodeLocations();
+	}
+	
+	public void translateY(int y) {
+		this.location.setY(this.location.getY() + y);
+		setNodeLocations();
 	}
 
 	public Color getColor() {
@@ -144,5 +182,21 @@ public class Chip extends Component {
 
 	public void setColor(Color color) {
 		this.color = color;
+	}
+
+	public Boolean getHovered() {
+		return hovered;
+	}
+
+	public void setHovered(Boolean hovered) {
+		this.hovered = hovered;
+	}
+
+	public Boolean getSelected() {
+		return selected;
+	}
+
+	public void setSelected(Boolean selected) {
+		this.selected = selected;
 	}
 }

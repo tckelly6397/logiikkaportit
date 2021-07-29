@@ -71,11 +71,6 @@ public class Node extends Component {
 		setUsed(false);
 	}
 	
-	public int clamp(int num, int max) {
-		if(num > max) return max;
-		return num;
-	}
-	
 	public Node getCollision(int x, int y) {
 		int distN = (int)Math.abs(Math.sqrt(Math.pow(spot.getXAsInt() - x + 8, 2) + Math.pow(spot.getYAsInt() - y + 30, 2)));
 		if(distN < size - 6)

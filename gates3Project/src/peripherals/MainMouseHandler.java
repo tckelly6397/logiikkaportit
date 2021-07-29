@@ -11,11 +11,24 @@ import gates3Project.Initialize;
 import utils.Spot;
 
 public class MainMouseHandler extends MouseAdapter {
+	int offsetX = 0;
+	int offsetY = 0;
 	
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		int x = e.getX();
 		int y = e.getY();
+		
+		//Chip stuff
+		for(Chip c : Initialize.e.getChips()) {
+			if(c.getCollision(x, y) != null) {
+				c.setHovered(true);
+				break;
+			}
+			else
+				c.setHovered(false);
+		}
+		//End of Chip Stuff
 		
 		//Wire Stuff
 		ArrayList<Wire> wires = Initialize.e.getWires();
@@ -32,7 +45,6 @@ public class MainMouseHandler extends MouseAdapter {
 				tempSpot = new Spot(w.getSpots().get(w.getSpots().size() - 1).getXAsInt(), y - 27);
 			
 			w.setTempSpot(tempSpot);
-			Initialize.e.update();
 		}
 		
 		//Wire Collision
@@ -62,9 +74,9 @@ public class MainMouseHandler extends MouseAdapter {
 		
 		if(node != null)
 			node.setHovered(true);
+		//End of Node Stuff
 		
 		Initialize.e.update();	
-		//End of Node Stuff
 	}
 	
 	@Override
@@ -146,6 +158,7 @@ public class MainMouseHandler extends MouseAdapter {
 						w.setSelected(false);
 						node.addInputWire(w);
 						w.setOutputNode(node);
+						w.update();
 					}
 				}
 			}
@@ -167,8 +180,52 @@ public class MainMouseHandler extends MouseAdapter {
 			}
 			//End of second wire and stuff
 		}
+		//End of Node Stuff
 		
 		Initialize.e.update();
-		//End of Node Stuff
+	}
+	
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		int x = e.getX();
+		int y = e.getY();
+		
+		for(Chip c : Initialize.e.getChips()) {
+			if(c.getSelected()) {
+				c.translateX(x - c.getX() + offsetX);
+				c.translateY(y - c.getY() + offsetY);
+				
+				break;
+			}
+		}
+		
+		Initialize.e.update();
+	}
+	
+	@Override
+	public void mousePressed(MouseEvent e) {
+		int x = e.getX();
+		int y = e.getY();
+		
+		for(Chip c : Initialize.e.getChips()) {
+			if(c.getCollision(x, y) != null) {
+				c.setSelected(true);
+				offsetX = c.getX() - x;
+				offsetY = c.getY() - y;
+				break;
+			}		
+		}
+	}
+	
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		//int x = e.getX();
+		//int y = e.getY();
+		
+		for(Chip c : Initialize.e.getChips())
+			c.setSelected(false);
+		
+		offsetX = 0;
+		offsetY = 0;
 	}
 }

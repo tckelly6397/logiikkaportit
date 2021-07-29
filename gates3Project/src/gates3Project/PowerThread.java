@@ -1,41 +1,41 @@
 package gates3Project;
 
-import java.util.ArrayList;
+import java.util.concurrent.*;
 
 import components.Component;
 
 public class PowerThread implements Runnable {
-	ArrayList<Component> nextList = new ArrayList<>();
+	private CopyOnWriteArrayList<Component> nextList = new CopyOnWriteArrayList<>();
+	volatile boolean inUse = false;
 	
 	@Override
 	public void run() {
 		while(true) {
-			Environment e = Initialize.e;
-
-			if(e == null || nextList.isEmpty()) 
+			if(Initialize.e == null || nextList.isEmpty()) 
 				continue;
-
-			ArrayList<Component> temp = new ArrayList<>(nextList);
-			nextList = new ArrayList<>();
+				
+			int size = nextList.size() - 1;
+			for(Component c : nextList)
+				if(c != null) {
+					c.update();
+				}
 			
-			for(Component c : temp)
-				c.update();
+			for(int i = size; i >= 0; i--) 
+				nextList.remove(i);
 			
-			e.update();
-			Initialize.e = e;
+			System.out.println(nextList);
+		
 			try {
-				Thread.sleep(100);
+				Thread.sleep(250);
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 			}
 		}
 	}
 
-	public ArrayList<Component> getNext() {
-		return nextList;
-	}
-
 	public void addNext(Component next) {
-		this.nextList.add(next);
+		if(nextList.size() < 1000) {//Stops ArrayList heap error 
+			this.nextList.add(next);
+		}
 	}
 }

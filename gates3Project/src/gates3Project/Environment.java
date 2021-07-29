@@ -19,7 +19,7 @@ import utils.Spot;
 @SuppressWarnings("serial")
 public class Environment extends JPanel {
 	private JFrame frame = new JFrame("Gate");
-	private PowerThread pw = Initialize.pw;
+	private volatile PowerThread pw = Initialize.pw;
 	private MainMouseHandler mouseHandler = new MainMouseHandler();
 	private MainKeyHandler keyHandler = new MainKeyHandler();
 	
@@ -58,7 +58,19 @@ public class Environment extends JPanel {
 	    frame.setVisible(true);  
 	    frame.add(this);
 	    
-	    update();
+	    //update();
+	}
+	
+	public void run() {
+		while(true) {
+	    	update();
+	    	
+	    	try {
+	    		Thread.sleep(17);
+	    	}catch(InterruptedException e) {
+	    		
+	    	}
+	    }
 	}
 	
 	public void update() {
