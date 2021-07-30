@@ -4,7 +4,10 @@ import java.awt.Color;
 
 import components.Chip;
 import components.Node;
-import utils.DropList;
+import ui.ChipButton;
+import ui.CreateChipUI;
+import ui.DropList;
+import utils.Spot;
 import utils.TruthTable;
 
 public class Initialize {
@@ -17,20 +20,20 @@ public class Initialize {
 		
 		e = new Environment(1400, 800);
 		e.setDropList(new DropList(200, 80));
+		e.setCreateChipUI(new CreateChipUI(60, 110, 600, 30));
 		
-		for(int i = 0; i < 0; i++) {
-			Chip c = new Chip(200, 200, Color.GREEN, e);
-		    TruthTable tb = new TruthTable();
-		    tb.addTruth(new Boolean[]{true}, new Boolean[]{false});
-		    tb.addTruth(new Boolean[]{false}, new Boolean[]{true});
-		    c.setTable(tb);
-		    c.addInput(new Node(0, 0, 20, false, c, e));
-		    c.addOutput(new Node(0, 0, 20, false, e));
-		    c.setNodeLocations();
-		    c.update();
-		    
-		    e.addChip(c);
-		}
+		//NOT GATE
+		Chip ch = new Chip(400, 200, Color.GREEN, Initialize.e, "NOT");
+	    TruthTable tb = new TruthTable();
+	    tb.addTruth(new Boolean[]{true}, new Boolean[]{false});
+	    tb.addTruth(new Boolean[]{false}, new Boolean[]{true});
+	    ch.setTable(tb);
+	    ch.addInput(new Node(0, 0, 20, false, ch, Initialize.e));
+	    ch.addOutput(new Node(0, 0, 20, false, Initialize.e));
+	    ch.setNodeLocations();
+	    
+	    e.getDropList().getButtons().add(new ChipButton(new Spot(0, 0), ch));
+	    //END OF NOT GATE
 	    
 	    int defSize = 30;
 	    //Setup input nodes
@@ -39,7 +42,7 @@ public class Initialize {
 	    }
 		
 	    //Setup output nodes
-	    for(int i = 0; i < 6; i++) {
+	    for(int i = 0; i < 1; i++) {
 	    	e.addOutputNode(new Node(0, 0, defSize, false, e));
 	    }
 	    

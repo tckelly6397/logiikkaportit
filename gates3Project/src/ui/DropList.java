@@ -1,4 +1,4 @@
-package utils;
+package ui;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -7,9 +7,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
-import components.Chip;
-import components.Node;
-import gates3Project.Initialize;
+import utils.Spot;
 
 public class DropList {
 	private Spot location;
@@ -19,7 +17,7 @@ public class DropList {
 	private int maxShown;
 	private int scrollPosition;
 	private Boolean hovered;
-	ArrayList<DropButton> buttons = new ArrayList<>();
+	ArrayList<Button> buttons = new ArrayList<>();
 	
 	public DropList(int x, int y) {
 		this.location = new Spot(x, y);
@@ -30,21 +28,10 @@ public class DropList {
 		this.maxShown = 5;
 		this.hovered = false;
 		this.opened = false;
-		
-		Chip ch = new Chip(400, 200, Color.GREEN, Initialize.e);
-	    TruthTable tb = new TruthTable();
-	    tb.addTruth(new Boolean[]{true}, new Boolean[]{false});
-	    tb.addTruth(new Boolean[]{false}, new Boolean[]{true});
-	    ch.setTable(tb);
-	    ch.addInput(new Node(0, 0, 20, false, ch, Initialize.e));
-	    ch.addOutput(new Node(0, 0, 20, false, Initialize.e));
-	    ch.setNodeLocations();
-	    
-	    buttons.add(new ChipButton(new Spot(x, y + (0 * 50) + HEIGHT), ch));
 	    
 		for(int i = 0; i < 1; i++) {
 			Color c = new Color((int)(Math.random() * 255), (int)(Math.random() * 255), (int)(Math.random() * 255));
-			buttons.add(new DropButton(new Spot(x, y + (i * 50) + HEIGHT), 150, 50, c));
+			buttons.add(new Button(new Spot(x, y + (i * 50) + HEIGHT), 150, 50, c, ""));
 		}
 		
 		setButtonLocations();
@@ -103,15 +90,13 @@ public class DropList {
 		else
 			hovered = false;
 		
-		for(DropButton db : buttons) {
+		for(Button db : buttons) {
 			db.executeHovered(x, y);
 		}
 	}
 	
 	public void open() {
-		for(DropButton db : buttons) {
-			db.getLocation().setX(location.getX());
-		}
+		setButtonLocations();
 	}
 	
 	public void close() {
@@ -136,7 +121,7 @@ public class DropList {
 	}
 	
 	public void scrollDown() {
-		if(scrollPosition < buttons.size() - maxShown - 1)
+		if(scrollPosition < buttons.size() - maxShown)
 			scrollPosition++;
 		
 		setButtonLocations();
@@ -163,7 +148,7 @@ public class DropList {
 		}
 		
 		if(opened) {
-			for(DropButton db : buttons)
+			for(Button db : buttons)
 				db.leftClick(x, y);
 		}
 	}
@@ -226,19 +211,19 @@ public class DropList {
 		this.scrollPosition = scrollPosition;
 	}
 
-	public ArrayList<DropButton> getButtons() {
+	public ArrayList<Button> getButtons() {
 		return buttons;
 	}
 
-	public void setButtons(ArrayList<DropButton> buttons) {
+	public void setButtons(ArrayList<Button> buttons) {
 		this.buttons = buttons;
 	}
 	
-	public void addButton(DropButton dp) {
+	public void addButton(Button dp) {
 		this.buttons.add(dp);
 	}
 	
-	public void removeButton(DropButton dp) {
+	public void removeButton(Button dp) {
 		this.buttons.remove(dp);
 	}
 }

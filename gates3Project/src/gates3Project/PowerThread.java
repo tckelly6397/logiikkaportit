@@ -7,6 +7,7 @@ import components.Component;
 public class PowerThread implements Runnable {
 	private CopyOnWriteArrayList<Component> nextList = new CopyOnWriteArrayList<>();
 	volatile boolean inUse = false;
+	private int wait = 17;
 	
 	@Override
 	public void run() {
@@ -26,7 +27,7 @@ public class PowerThread implements Runnable {
 			//System.out.println(nextList);
 		
 			try {
-				Thread.sleep(17);
+				Thread.sleep(wait);
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 			}
@@ -37,5 +38,9 @@ public class PowerThread implements Runnable {
 		if(nextList.size() < 1000) {//Stops ArrayList heap error 
 			this.nextList.add(next);
 		}
+	}
+	
+	public void setWait(int wait) {
+		this.wait = wait;
 	}
 }

@@ -1,7 +1,9 @@
 package components;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 
 import gates3Project.Environment;
@@ -22,15 +24,17 @@ public class Chip extends Component {
 	private int offsetX = 0;
 	private int offsetY = 0;
 	
-	public int WIDTH = 100;
-	public int HEIGHT = 50;
+	public int WIDTH = 80;
+	public int HEIGHT = 35;
 	
-	public Chip(int x, int y, Color c, Environment e) {
+	public Chip(int x, int y, Color c, Environment e, String label) {
 		this.location = new Spot(x, y);
 		this.color = c;
 		this.table = new TruthTable();
 		this.e = e;
+		this.label = label;
 		
+		setHeight();
 		setNodeLocations();
 	}
 	
@@ -51,6 +55,7 @@ public class Chip extends Component {
 			this.outputNodes.add(new Node(n));
 		}
 		
+		setHeight();
 		setNodeLocations();
 	}
 	
@@ -71,6 +76,13 @@ public class Chip extends Component {
 		
 		for(Node n : outputNodes)
 			n.draw(g);
+		
+		setWidth(g);
+		setNodeLocations();
+		
+		g.setColor(Color.BLACK);
+		g.setFont(new Font("Verdana", Font.BOLD, 25));
+		g.drawString(label, x + 11, y + HEIGHT - ((HEIGHT - 20) / 2));
 	}
 	
 	public void update() {
@@ -80,19 +92,35 @@ public class Chip extends Component {
 		}
 	}
 	
+	public void setWidth(Graphics g) {
+		Graphics2D g2d = (Graphics2D)g;
+		g2d.setFont(new Font("Verdana", Font.BOLD, 25));
+		int stringWidth = (int) g2d.getFontMetrics().getStringBounds(label, g2d).getWidth();
+		
+		this.WIDTH = stringWidth + 28;
+	}
+	
+	public void setHeight() {
+		int nodeCount = inputNodes.size();
+		if(outputNodes.size() > nodeCount)
+			nodeCount = outputNodes.size();
+		
+		HEIGHT = nodeCount * (20 + 5);
+	}
+	
 	public void setNodeLocations() {
 		int x = location.getXAsInt();
 		int y = location.getYAsInt();
 		
 		for(int i = 0; i < inputNodes.size(); i++) {
 			int defSize = 20;
-			int h = y + (HEIGHT / 2) - ((defSize + 20) * i) + ((defSize + 20) * inputNodes.size() / 2) - ((defSize + 20) / 2);
+			int h = y + (HEIGHT / 2) - ((defSize + 5) * i) + ((defSize + 5) * inputNodes.size() / 2) - ((defSize + 5) / 2);
 			inputNodes.get(i).setSpot(new Spot(x, h));
 		}
 		
 		for(int i = 0; i < outputNodes.size(); i++) {
 			int defSize = 20;
-			int h = y + (HEIGHT / 2) - ((defSize + 20) * i) + ((defSize + 20) * outputNodes.size() / 2) - ((defSize + 20) / 2);
+			int h = y + (HEIGHT / 2) - ((defSize + 5) * i) + ((defSize + 5) * outputNodes.size() / 2) - ((defSize + 5) / 2);
 			outputNodes.get(i).setSpot(new Spot(x + WIDTH, h));
 		}
 	}

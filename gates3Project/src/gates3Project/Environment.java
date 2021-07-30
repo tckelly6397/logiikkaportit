@@ -14,8 +14,14 @@ import components.Node;
 import components.Wire;
 import peripherals.MainKeyHandler;
 import peripherals.MainMouseHandler;
-import utils.DropList;
+import ui.ChipButton;
+import ui.CreateChipUI;
+import ui.DropList;
+import ui.MinusButton;
+import ui.PlusButton;
+import utils.Simulate;
 import utils.Spot;
+import utils.TruthTable;
 
 @SuppressWarnings("serial")
 public class Environment extends JPanel {
@@ -30,6 +36,11 @@ public class Environment extends JPanel {
 	private ArrayList<Chip> chips = new ArrayList<>();
 	
 	private DropList dropList;
+	private CreateChipUI createChipUI; //FOR ALL OF THE INPUT AND OUTPUT THINGS CREATE A UI HOLDER JUST LIKE CREATECHIPUI SO THAT IT DOESNT MAKE EVERYTHING ALL MESSY AND SO YOU CAN UPDATE EVERYTHING ALL AT ONCE
+	private PlusButton addInput = new PlusButton(new Spot(5, 130), 40, 40, Color.BLUE, "Test", inputNodes);
+	private PlusButton addOutput = new PlusButton(new Spot(300, 130), 40, 40, Color.BLUE, "Test", outputNodes);
+	private MinusButton removeInput = new MinusButton(new Spot(5, 300), 40, 40, Color.BLUE, "Test", inputNodes);
+	private MinusButton removeOutput = new MinusButton(new Spot(300, 300), 40, 40, Color.BLUE, "Test", outputNodes);
 	
 	public void paintComponent(Graphics g) {
 		for(Chip c : chips)
@@ -56,6 +67,11 @@ public class Environment extends JPanel {
 			n.draw(g);
 		
 		dropList.draw(g);
+		createChipUI.draw(g);
+		addInput.draw(g);
+		addOutput.draw(g);
+		removeInput.draw(g);
+		removeOutput.draw(g);
 	}
 	
 	public Environment(int WIDTH, int HEIGHT) {
@@ -100,8 +116,37 @@ public class Environment extends JPanel {
 		
 		//Update dropList
 		dropList.setLocation(new Spot(frame.getWidth() - 222, 80));
+		createChipUI.setLocation(new Spot(60, 110));
+		createChipUI.setWIDTH(frame.getWidth() - 130 - dropList.getWIDTH() - 20);
+		
+		removeInput.setLocation(new Spot(5, frame.getHeight() - 250));
+		removeOutput.setLocation(new Spot(frame.getWidth() - 130 + 20, frame.getHeight() - 250));
+		addOutput.setLocation(new Spot(frame.getWidth() - 130 + 20, 130));
 		
 		frame.repaint();
+	}
+	
+	public void createChip() {
+		Initialize.pw.setWait(0);
+		
+		TruthTable tb = Simulate.getTheTruth();
+		System.out.println(tb);
+		
+		Chip ch = new Chip(400, 200, Color.BLUE, Initialize.e, "OT");
+	    ch.setTable(tb);
+	    
+	    for(int i = 0; i < Initialize.e.getInputNodes().size(); i++) {
+	    	ch.addInput(new Node(0, 0, 20, false, ch, Initialize.e));
+	    }
+	    
+	    for(int i = 0; i < Initialize.e.getOutputNodes().size(); i++) {
+	    	ch.addOutput(new Node(0, 0, 20, false, Initialize.e));
+	    }
+	    ch.setNodeLocations();
+	    
+	    Initialize.e.getDropList().getButtons().add(new ChipButton(new Spot(0, 0), ch));
+		
+		Initialize.pw.setWait(17);
 	}
 
 	public JFrame getFrame() {
@@ -170,6 +215,30 @@ public class Environment extends JPanel {
 
 	public void setDropList(DropList dropList) {
 		this.dropList = dropList;
+	}
+
+	public CreateChipUI getCreateChipUI() {
+		return createChipUI;
+	}
+
+	public void setCreateChipUI(CreateChipUI createChipUI) {
+		this.createChipUI = createChipUI;
+	}
+	
+	public PlusButton getAddInput() {
+		return this.addInput;
+	}
+	
+	public PlusButton getAddOutput() {
+		return this.addOutput;
+	}
+	
+	public MinusButton getRemoveInput() {
+		return this.removeInput;
+	}
+	
+	public MinusButton getRemoveOutput() {
+		return this.removeOutput;
 	}
 
 	@Override
