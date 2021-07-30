@@ -92,7 +92,7 @@ public class Wire extends Component {
 	
 	@Override
 	public Boolean getCollision(int x, int y) {
-		y-= 32;
+		y -= 32;
 		x -= 8;
 		
 		for(int i = 0; i < spots.size() - 1; i++) {

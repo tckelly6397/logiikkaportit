@@ -2,6 +2,7 @@ package peripherals;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
 
 import components.Chip;
@@ -23,6 +24,7 @@ public class MainMouseHandler extends MouseAdapter {
 		Component.executeHovered(x, y, new ArrayList<Component>(Initialize.e.getWires()));
 		Component.executeHovered(x, y, new ArrayList<Component>(Initialize.e.getChips()));
 		Component.executeHovered(x, y, new ArrayList<Component>(Node.getAllNodes()));
+		Initialize.e.getDropList().executeHovered(x, y);
 		//End of Hover Stuff
 		
 		//Wire Stuff
@@ -40,6 +42,7 @@ public class MainMouseHandler extends MouseAdapter {
 		if(e.getButton() == MouseEvent.BUTTON1) {
 			Wire.leftClick(x, y);
 			Node.leftClick(x, y, Node.getNodeClick(x, y));
+			Initialize.e.getDropList().leftClick(x, y);
 		}
 		
 		//Right Click
@@ -75,5 +78,14 @@ public class MainMouseHandler extends MouseAdapter {
 		//int y = e.getY();
 		
 		Chip.mouseReleased();
+	}
+	
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		if(e.getWheelRotation() < 0) {
+			Initialize.e.getDropList().scrollUp();
+		} else {
+			Initialize.e.getDropList().scrollDown();
+		}
 	}
 }

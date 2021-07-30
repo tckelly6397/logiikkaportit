@@ -22,7 +22,7 @@ public class MainKeyHandler implements KeyListener {
 		if(e.getKeyCode() == KeyEvent.VK_A) {
 			System.out.println(e);
 			for(Chip c : Initialize.e.getChips())
-				for(Node n : c.getInputNodes()) {
+				for(Node n : c.getOutputNodes()) {
 					System.out.println(n);
 				}
 		}

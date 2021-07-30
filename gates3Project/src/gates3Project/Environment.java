@@ -14,6 +14,7 @@ import components.Node;
 import components.Wire;
 import peripherals.MainKeyHandler;
 import peripherals.MainMouseHandler;
+import utils.DropList;
 import utils.Spot;
 
 @SuppressWarnings("serial")
@@ -27,7 +28,8 @@ public class Environment extends JPanel {
 	private ArrayList<Node> outputNodes = new ArrayList<>();
 	private ArrayList<Wire> wires = new ArrayList<>();
 	private ArrayList<Chip> chips = new ArrayList<>();
-	//private ArrayList<ChipButton> chipButtons = new ArrayList<>();
+	
+	private DropList dropList;
 	
 	public void paintComponent(Graphics g) {
 		for(Chip c : chips)
@@ -52,6 +54,8 @@ public class Environment extends JPanel {
 		
 		for(Node n : inputNodes)
 			n.draw(g);
+		
+		dropList.draw(g);
 	}
 	
 	public Environment(int WIDTH, int HEIGHT) {
@@ -59,11 +63,11 @@ public class Environment extends JPanel {
 	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    frame.addMouseListener(mouseHandler);
 	    frame.addMouseMotionListener(mouseHandler);
+	    frame.addMouseWheelListener(mouseHandler);
 	    frame.addKeyListener(keyHandler);
 	    frame.setSize(WIDTH, HEIGHT);
 	    frame.setVisible(true);  
 	    frame.add(this);
-	    
 	    //update();
 	}
 	
@@ -93,6 +97,9 @@ public class Environment extends JPanel {
 			int h = (frame.getHeight() / 2) - ((defSize + 20) * i) + ((defSize + 20) * outputNodes.size() / 2) - ((defSize + 20) / 2);
 			outputNodes.get(i).setSpot(new Spot(frame.getWidth() - 70, h));
 		}
+		
+		//Update dropList
+		dropList.setLocation(new Spot(frame.getWidth() - 222, 80));
 		
 		frame.repaint();
 	}
@@ -157,11 +164,19 @@ public class Environment extends JPanel {
 		this.pw = pw;
 	}
 
+	public DropList getDropList() {
+		return dropList;
+	}
+
+	public void setDropList(DropList dropList) {
+		this.dropList = dropList;
+	}
+
 	@Override
 	public String toString() {
 		//return "Environment [frame=" + frame + ", mouseHandler=" + mouseHandler + ", keyHandler=" + keyHandler
 			//	+ ", inputNodes=" + inputNodes + ", outputNodes=" + outputNodes + ", wires=" + wires + ", chips="
 				//+ chips + "]";
-		return "";
+		return "t";
 	}
 }

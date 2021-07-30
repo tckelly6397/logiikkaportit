@@ -43,6 +43,15 @@ public class Node extends Component {
 		this.e = e;
 	}
 	
+	public Node(Node n) {
+		this.spot = n.getSpot();
+		this.size = n.getSize();
+		this.clickable = n.isClickable();
+		this.e = n.getEnvironment();
+		this.c = n.getC();
+		this.powered = false;
+	}
+	
 	public void draw(Graphics g) {
 		g.setColor(Color.BLACK);
 		
@@ -249,6 +258,6 @@ public class Node extends Component {
 	@Override
 	public String toString() {
 		return "Node [spot=" + spot + ", size=" + size + ", powered=" + powered + ", wires="
-				+ wires + "]";
+				+ wires + ", Environment=" + e + "]";
 	}
 }

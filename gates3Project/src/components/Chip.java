@@ -34,6 +34,26 @@ public class Chip extends Component {
 		setNodeLocations();
 	}
 	
+	public Chip(Chip c) {
+		this.location = new Spot(c.getX(), c.getY());
+		this.color = c.getColor();
+		this.table = c.getTable();
+		this.e = c.getEnvironment();
+		this.label = c.label;
+		
+		for(Node n : c.getInputNodes()) {
+			n.setC(this);
+			this.inputNodes.add(new Node(n));
+		}
+		
+		for(Node n : c.getOutputNodes()) {
+			n.setC(null);
+			this.outputNodes.add(new Node(n));
+		}
+		
+		setNodeLocations();
+	}
+	
 	public void draw(Graphics g) {
 		int x = location.getXAsInt();
 		int y = location.getYAsInt();
@@ -41,7 +61,6 @@ public class Chip extends Component {
 		g.setColor(color);
 		
 		if(getHovered()) {
-			//g.setColor(Color.RED);
 			g.setColor(new Color(clamp(g.getColor().getRed() + 50, 255), clamp(g.getColor().getGreen() + 50, 255), clamp(g.getColor().getBlue() + 50, 255)));
 		}
 			
