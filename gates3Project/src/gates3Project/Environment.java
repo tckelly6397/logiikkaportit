@@ -50,7 +50,7 @@ public class Environment extends JPanel {
 				w.draw(g);
 		}
 		
-		g.setColor(Color.BLACK);
+		g.setColor(new Color(80, 80, 80));
 		Graphics2D g2d = (Graphics2D)g;
 		g2d.setStroke(new BasicStroke(8, 1, 1));
 		
@@ -122,7 +122,7 @@ public class Environment extends JPanel {
 		TruthTable tb = Simulate.getTheTruth();
 		System.out.println(tb);
 		
-		Chip ch = new Chip(400, 200, Color.BLUE, Initialize.e, "OT");
+		Chip ch = new Chip(400, 200, Color.BLUE, Initialize.e, createChipUI.getNameLabel().getLabel());
 	    ch.setTable(tb);
 	    
 	    for(int i = 0; i < Initialize.e.getInputNodes().size(); i++) {

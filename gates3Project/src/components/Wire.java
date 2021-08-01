@@ -186,6 +186,11 @@ public class Wire extends Component {
 	}
 	
 	public void destroy() {
+		
+		//If the wire is being created
+		if(this.outputNode == null)
+			return;
+		
 		this.powered = false;
 		
 		update();
