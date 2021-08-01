@@ -17,8 +17,8 @@ public class CreateChipUI {
 		this.WIDTH = WIDTH;
 		this.HEIGHT = HEIGHT;
 		
-		int btnWidth = 120;
-		btn = new Button(new Spot(x + WIDTH - btnWidth, y), btnWidth, HEIGHT, new Color(180, 180, 180), "CREATE");
+		int btnWidth = 140;
+		btn = new Button(new Spot(x + WIDTH - btnWidth, y), btnWidth, HEIGHT, new Color(20, 180, 20), "CREATE");
 		btn.setCommand(new CreateCommand());
 	}
 	

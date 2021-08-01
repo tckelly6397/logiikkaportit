@@ -9,11 +9,13 @@ import gates3Project.Initialize;
 import utils.Spot;
 
 public class PlusButton extends Button {
-	ArrayList<Node> nodes;
+	private ArrayList<Node> nodes;
+	private Boolean isInput;
 	
-	public PlusButton(Spot location, int WIDTH, int HEIGHT, Color c, String label, ArrayList<Node> nodes) {
+	public PlusButton(Spot location, int WIDTH, int HEIGHT, Color c, String label, ArrayList<Node> nodes, Boolean isInput) {
 		super(location, WIDTH, HEIGHT, c, label);
 		this.nodes = nodes;
+		this.isInput = isInput;
 	}
 	
 	@Override
@@ -35,7 +37,7 @@ public class PlusButton extends Button {
 	public void leftClick(int x, int y) {
 		if(getCollision(x, y)) {
 			int defSize = 30;
-			nodes.add(new Node(0, 0, defSize, true, Initialize.e));
+			nodes.add(new Node(0, 0, defSize, isInput, Initialize.e));
 		}
 	}
 

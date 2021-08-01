@@ -9,6 +9,8 @@ public class Simulate {
 	public static TruthTable getTheTruth() {
 		TruthTable table = new TruthTable();
 		
+		long startTime = System.currentTimeMillis();
+		
 		ArrayList<String> stringInput = genInp(Initialize.e.getInputNodes().size());
 		ArrayList<Boolean[]> tableIn = new ArrayList<>();
 		ArrayList<Boolean[]> tableOut = new ArrayList<>();
@@ -26,11 +28,10 @@ public class Simulate {
 				
 				Initialize.e.getInputNodes().get(i).setPowered(theBool);
 				Initialize.e.getInputNodes().get(i).update();
-				try {
-					Thread.sleep(10);
-				} catch(InterruptedException e) {
-					
-				}
+				
+				//Wait for Thread to finish
+				Initialize.e.setWait();
+				 
 				bools[i] = theBool;
 			}
 			
@@ -39,6 +40,12 @@ public class Simulate {
 			
 			table.addTruth(bools, getTableOut());
 		}
+		
+		long elapsedTime = System.currentTimeMillis() - startTime;
+		double elapsedSeconds = (double)elapsedTime / 1000;
+		double elapsedMinutes = elapsedSeconds / 60;
+		
+		System.out.println(elapsedTime + "   " + elapsedSeconds + "   " + elapsedMinutes);
 		
 		return table;
 	}

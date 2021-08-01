@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import components.Chip;
 import components.Node;
+import ui.ChangeNodesUI;
 import ui.ChipButton;
 import ui.CreateChipUI;
 import ui.DropList;
@@ -20,7 +21,8 @@ public class Initialize {
 		
 		e = new Environment(1400, 800);
 		e.setDropList(new DropList(200, 80));
-		e.setCreateChipUI(new CreateChipUI(60, 110, 600, 30));
+		e.setCreateChipUI(new CreateChipUI(60, 110, 600, 34));
+		e.setChangeNodesUI(new ChangeNodesUI());
 		
 		//NOT GATE
 		Chip ch = new Chip(400, 200, Color.GREEN, Initialize.e, "NOT");

@@ -14,11 +14,10 @@ import components.Node;
 import components.Wire;
 import peripherals.MainKeyHandler;
 import peripherals.MainMouseHandler;
+import ui.ChangeNodesUI;
 import ui.ChipButton;
 import ui.CreateChipUI;
 import ui.DropList;
-import ui.MinusButton;
-import ui.PlusButton;
 import utils.Simulate;
 import utils.Spot;
 import utils.TruthTable;
@@ -36,11 +35,8 @@ public class Environment extends JPanel {
 	private ArrayList<Chip> chips = new ArrayList<>();
 	
 	private DropList dropList;
-	private CreateChipUI createChipUI; //FOR ALL OF THE INPUT AND OUTPUT THINGS CREATE A UI HOLDER JUST LIKE CREATECHIPUI SO THAT IT DOESNT MAKE EVERYTHING ALL MESSY AND SO YOU CAN UPDATE EVERYTHING ALL AT ONCE
-	private PlusButton addInput = new PlusButton(new Spot(5, 130), 40, 40, Color.BLUE, "Test", inputNodes);
-	private PlusButton addOutput = new PlusButton(new Spot(300, 130), 40, 40, Color.BLUE, "Test", outputNodes);
-	private MinusButton removeInput = new MinusButton(new Spot(5, 300), 40, 40, Color.BLUE, "Test", inputNodes);
-	private MinusButton removeOutput = new MinusButton(new Spot(300, 300), 40, 40, Color.BLUE, "Test", outputNodes);
+	private CreateChipUI createChipUI;
+	private ChangeNodesUI changeNodesUI;
 	
 	public void paintComponent(Graphics g) {
 		for(Chip c : chips)
@@ -68,10 +64,7 @@ public class Environment extends JPanel {
 		
 		dropList.draw(g);
 		createChipUI.draw(g);
-		addInput.draw(g);
-		addOutput.draw(g);
-		removeInput.draw(g);
-		removeOutput.draw(g);
+		changeNodesUI.draw(g);
 	}
 	
 	public Environment(int WIDTH, int HEIGHT) {
@@ -84,7 +77,6 @@ public class Environment extends JPanel {
 	    frame.setSize(WIDTH, HEIGHT);
 	    frame.setVisible(true);  
 	    frame.add(this);
-	    //update();
 	}
 	
 	public void run() {
@@ -119,9 +111,7 @@ public class Environment extends JPanel {
 		createChipUI.setLocation(new Spot(60, 110));
 		createChipUI.setWIDTH(frame.getWidth() - 130 - dropList.getWIDTH() - 20);
 		
-		removeInput.setLocation(new Spot(5, frame.getHeight() - 250));
-		removeOutput.setLocation(new Spot(frame.getWidth() - 130 + 20, frame.getHeight() - 250));
-		addOutput.setLocation(new Spot(frame.getWidth() - 130 + 20, 130));
+		changeNodesUI.updateLocations();
 		
 		frame.repaint();
 	}
@@ -145,8 +135,27 @@ public class Environment extends JPanel {
 	    ch.setNodeLocations();
 	    
 	    Initialize.e.getDropList().getButtons().add(new ChipButton(new Spot(0, 0), ch));
+		Initialize.e.getDropList().setButtonLocations();
+		
+		setInputsFalse();
+		for(Node n : inputNodes) {
+			n.update();
+			Initialize.e.setWait();
+		}
 		
 		Initialize.pw.setWait(17);
+	}
+	
+	public void setWait() {
+		synchronized(this) {
+			try {
+				synchronized(Initialize.e) {
+					this.wait();
+				}
+            } catch (InterruptedException e)  {
+                Thread.currentThread().interrupt(); 
+            }
+		}
 	}
 
 	public JFrame getFrame() {
@@ -167,6 +176,11 @@ public class Environment extends JPanel {
 	
 	public void addInputNode(Node n) {
 		inputNodes.add(n);
+	}
+	
+	public void setInputsFalse() {
+		for(Node n : inputNodes)
+			n.setPowered(false);
 	}
 
 	public ArrayList<Node> getOutputNodes() {
@@ -225,20 +239,12 @@ public class Environment extends JPanel {
 		this.createChipUI = createChipUI;
 	}
 	
-	public PlusButton getAddInput() {
-		return this.addInput;
+	public ChangeNodesUI getChangeNodesUI() {
+		return this.changeNodesUI;
 	}
 	
-	public PlusButton getAddOutput() {
-		return this.addOutput;
-	}
-	
-	public MinusButton getRemoveInput() {
-		return this.removeInput;
-	}
-	
-	public MinusButton getRemoveOutput() {
-		return this.removeOutput;
+	public void setChangeNodesUI(ChangeNodesUI cnUI) {
+		this.changeNodesUI = cnUI;
 	}
 
 	@Override

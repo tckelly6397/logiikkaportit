@@ -43,7 +43,7 @@ public class Button {
 			g.setColor(new Color(clamp(g.getColor().getRed() + 50, 255), clamp(g.getColor().getGreen() + 50, 255), clamp(g.getColor().getBlue() + 50, 255)));
 		}
 		g.setFont(new Font("Verdana", Font.BOLD, HEIGHT - 5));
-		g.drawString(label, x + 5, y + 5 + (HEIGHT - (5 * 2) - 3));
+		g.drawString(label, x + 5, y + 5 + (HEIGHT - (5 * 2) - (HEIGHT / 20)));
 	}
 	
 	public int clamp(int num, int max) {

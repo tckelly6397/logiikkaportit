@@ -9,10 +9,12 @@ import utils.Spot;
 
 public class MinusButton extends Button {
 	ArrayList<Node> nodes;
+	private Boolean isInput;
 	
-	public MinusButton(Spot location, int WIDTH, int HEIGHT, Color c, String label, ArrayList<Node> nodes) {
+	public MinusButton(Spot location, int WIDTH, int HEIGHT, Color c, String label, ArrayList<Node> nodes, Boolean isInput) {
 		super(location, WIDTH, HEIGHT, c, label);
 		this.nodes = nodes;
+		this.isInput = isInput;
 	}
 	
 	@Override
@@ -32,8 +34,18 @@ public class MinusButton extends Button {
 	@Override
 	public void leftClick(int x, int y) {
 		if(getCollision(x, y)) {
-			nodes.remove(nodes.size() - 1);
+			if(nodes.size() > 1) {
+				Node n = nodes.get(nodes.size() - 1);
+				n.destroy(isInput, !isInput);
+			}
 		}
 	}
 
+	public Boolean getIsInput() {
+		return isInput;
+	}
+
+	public void setIsInput(Boolean isInput) {
+		this.isInput = isInput;
+	}
 }

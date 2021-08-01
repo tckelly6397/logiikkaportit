@@ -29,10 +29,10 @@ public class DropList {
 		this.hovered = false;
 		this.opened = false;
 	    
-		for(int i = 0; i < 1; i++) {
-			Color c = new Color((int)(Math.random() * 255), (int)(Math.random() * 255), (int)(Math.random() * 255));
-			buttons.add(new Button(new Spot(x, y + (i * 50) + HEIGHT), 150, 50, c, ""));
-		}
+		//for(int i = 0; i < 1; i++) {
+			//Color c = new Color((int)(Math.random() * 255), (int)(Math.random() * 255), (int)(Math.random() * 255));
+			//buttons.add(new Button(new Spot(x, y + (i * 50) + HEIGHT), 150, 50, c, ""));
+		//}
 		
 		setButtonLocations();
 	}

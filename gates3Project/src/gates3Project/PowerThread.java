@@ -1,20 +1,31 @@
 package gates3Project;
 
+import java.util.ArrayList;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import components.Component;
 
 public class PowerThread implements Runnable {
-	private CopyOnWriteArrayList<Component> nextList = new CopyOnWriteArrayList<>();
-	volatile boolean inUse = false;
+	private volatile CopyOnWriteArrayList<Component> nextList = new CopyOnWriteArrayList<>();
+	private volatile AtomicBoolean inUse = new AtomicBoolean(false);
 	private int wait = 17;
 	
 	@Override
 	public void run() {
 		while(true) {
-			if(Initialize.e == null || nextList.isEmpty()) 
+			if(nextList.isEmpty()) {
+				synchronized(Initialize.e) {
+					Initialize.e.notify();
+				}
+			}
+			
+			if(Initialize.e == null || nextList.isEmpty()) {
+				//inUse = false;
 				continue;
-				
+			}
+			
+			inUse.set(true);
 			int size = nextList.size() - 1;
 			for(Component c : nextList)
 				if(c != null) {
@@ -34,6 +45,15 @@ public class PowerThread implements Runnable {
 		}
 	}
 
+	public AtomicBoolean getInUse() {
+		return this.inUse;
+	}
+	
+	public ArrayList<Component> getNextList() {
+		System.out.println(nextList);
+		return new ArrayList<Component>(this.nextList);
+	}
+	
 	public void addNext(Component next) {
 		if(nextList.size() < 1000) {//Stops ArrayList heap error 
 			this.nextList.add(next);

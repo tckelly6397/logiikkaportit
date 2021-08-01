@@ -170,6 +170,22 @@ public class Node extends Component {
 			Initialize.e.getWires().add(w);
 		}
 	}
+	
+	public void destroy(Boolean isInput, Boolean isOutput) {
+		int wiresSize = wires.size();
+		for(int i = wiresSize - 1; i >= 0; i--) 
+			wires.get(i).destroy();
+		
+		wiresSize = inputWires.size();
+		for(int i = wiresSize - 1; i >= 0; i--) 
+			inputWires.get(i).destroy();
+		
+		if(isInput)
+			Initialize.e.getInputNodes().remove(this);
+		
+		if(isOutput)
+			Initialize.e.getOutputNodes().remove(this);
+	}
 
 	public Spot getSpot() {
 		return spot;

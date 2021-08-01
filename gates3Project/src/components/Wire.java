@@ -186,12 +186,13 @@ public class Wire extends Component {
 	}
 	
 	public void destroy() {
+		this.powered = false;
+		
+		update();
+		outputNode.update();
+		
 		inputNode.removeWire(this);
 		outputNode.removeInputWire(this);
-	
-		inputNode.setPowered(false);
-		outputNode.setPowered(false);
-		outputNode.update();
 		
 		this.e.getWires().remove(this);
 	}
