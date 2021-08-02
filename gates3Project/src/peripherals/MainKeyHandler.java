@@ -2,9 +2,8 @@ package peripherals;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
-import components.Chip;
-import components.Node;
 import gates3Project.Initialize;
 import ui.InputLabel;
 
@@ -18,31 +17,21 @@ public class MainKeyHandler implements KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-		//System.out.println(e.getKeyCode());
-		if(e.getKeyCode() == KeyEvent.VK_A) {
-			//System.out.println(e);
-			for(Chip c : Initialize.e.getChips())
-				for(Node n : c.getOutputNodes()) {
-					System.out.println(n);
-				}
+		ArrayList<InputLabel> labels = Initialize.e.getCreateChipUI().getLabels();
+		
+		for(InputLabel il : labels) {
+			if(e.getKeyCode() == KeyEvent.VK_RIGHT && il.getSelected())
+				il.moveCursor(1);
+			
+			if(e.getKeyCode() == KeyEvent.VK_LEFT && il.getSelected())
+				il.moveCursor(-1);
+			
+			if(il.getSelected() && ((Character.isLetter(e.getKeyChar()) && il.getLetters()) || (Character.isDigit(e.getKeyChar()) && il.getNumbers())))
+				il.addCharacter(e.getKeyChar());
+			
+			if(il.getSelected() && e.getKeyCode() == KeyEvent.VK_BACK_SPACE)
+				il.removeCharacter();
 		}
-		
-		InputLabel inputLabel = Initialize.e.getCreateChipUI().getNameLabel();
-		
-		if(e.getKeyCode() == KeyEvent.VK_RIGHT)
-			if(inputLabel.getSelected())
-				inputLabel.moveCursor(1);
-		
-		if(e.getKeyCode() == KeyEvent.VK_LEFT)
-			if(inputLabel.getSelected())
-				inputLabel.moveCursor(-1);
-		
-		if(inputLabel.getSelected() && Character.isLetter(e.getKeyChar()))
-			inputLabel.addCharacter(e.getKeyChar());
-		
-		if(inputLabel.getSelected() && e.getKeyCode() == KeyEvent.VK_BACK_SPACE)
-			inputLabel.removeCharacter();
 		
 		Initialize.e.update();
 	}

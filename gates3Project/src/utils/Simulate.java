@@ -30,7 +30,7 @@ public class Simulate {
 				Initialize.e.getInputNodes().get(i).update();
 				
 				//Wait for Thread to finish
-				Initialize.e.setWait();
+				Initialize.e.setWait(500);
 				 
 				bools[i] = theBool;
 			}

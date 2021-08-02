@@ -14,10 +14,13 @@ public class InputLabel {
 	private Color textColor;
 	private Boolean hovered;
 	private int cursorPosition;
-	private Boolean selected = true;
+	private Boolean selected;
+	private Boolean letters;
+	private Boolean numbers;
 	private int max;
 	
-	public InputLabel(int x, int y, String label, int WIDTH, int HEIGHT, Color textColor, int cursorPosition, int max) {
+	public InputLabel(int x, int y, String label, int WIDTH, int HEIGHT, Color textColor, int cursorPosition, int max, Boolean letters, Boolean numbers) {
+		this.selected = false;
 		this.location = new Spot(x, y);
 		this.label = label;
 		this.WIDTH = WIDTH;
@@ -26,6 +29,8 @@ public class InputLabel {
 		this.hovered = false;
 		this.cursorPosition = cursorPosition;
 		this.max = max;
+		this.letters = letters;
+		this.numbers = numbers;
 	}
 	
 	public void draw(Graphics g) {
@@ -41,6 +46,10 @@ public class InputLabel {
 		for(int i = 0; i < max; i++)
 			maxString += "W";
 		g.setColor(Color.BLACK);
+		if(getHovered())
+			g.setColor(new Color(clamp(g.getColor().getRed() + 20, 255), clamp(g.getColor().getGreen() + 20, 255), clamp(g.getColor().getBlue() + 20, 255)));
+		
+		WIDTH = g.getFontMetrics(f).stringWidth(maxString) + 8;
 		g.drawRect(location.getXAsInt() - 8, location.getYAsInt() - HEIGHT + 3, g.getFontMetrics(f).stringWidth(maxString) + 8, HEIGHT + 6);
 		
 		if(!selected) //Everything after this needs the input to be selected
@@ -58,12 +67,54 @@ public class InputLabel {
 		g.drawRect(x + location.getXAsInt() + w, location.getYAsInt() - HEIGHT + 5, 2, HEIGHT - 5);
 	}
 	
+	public int clamp(int num, int max) {
+		if(num > max) return max;
+		return num;
+	}
+	
+	public Boolean leftClick(int x, int y) {
+		if(getCollision(x, y)) {
+			this.selected = true;
+			this.cursorPosition = label.length() - 1;
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public void executeHovered(int x, int y) {
+		if(getCollision(x, y))
+			this.hovered = true;
+		else
+			this.hovered = false;
+	}
+	
+	public Boolean getCollision(int x, int y) {
+		int x1 = location.getXAsInt();
+		int y1 = location.getYAsInt();
+		int x2 = x1 + WIDTH;
+		int y2 = y1 + HEIGHT;
+		
+		if(x > x1 && x < x2 && y > y1 && y < y2)
+			return true;
+		
+		return false;
+	}
+	
 	public Spot getLocation() {
 		return location;
 	}
 
 	public void setLocation(Spot location) {
 		this.location = location;
+	}
+	
+	public void setX(double x) {
+		this.location.setX(x);
+	}
+	
+	public void setY(double y) {
+		this.location.setY(y);
 	}
 
 	public String getLabel() {
@@ -160,5 +211,21 @@ public class InputLabel {
 
 	public void setMax(int max) {
 		this.max = max;
+	}
+
+	public Boolean getLetters() {
+		return letters;
+	}
+
+	public void setLetters(Boolean letters) {
+		this.letters = letters;
+	}
+
+	public Boolean getNumbers() {
+		return numbers;
+	}
+
+	public void setNumbers(Boolean numbers) {
+		this.numbers = numbers;
 	}	
 }

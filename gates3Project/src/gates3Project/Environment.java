@@ -122,7 +122,7 @@ public class Environment extends JPanel {
 		TruthTable tb = Simulate.getTheTruth();
 		System.out.println(tb);
 		
-		Chip ch = new Chip(400, 200, Color.BLUE, Initialize.e, createChipUI.getNameLabel().getLabel());
+		Chip ch = new Chip(400, 200, createChipUI.getColor(), Initialize.e, createChipUI.getNameLabel().getLabel());
 	    ch.setTable(tb);
 	    
 	    for(int i = 0; i < Initialize.e.getInputNodes().size(); i++) {
@@ -140,17 +140,17 @@ public class Environment extends JPanel {
 		setInputsFalse();
 		for(Node n : inputNodes) {
 			n.update();
-			Initialize.e.setWait();
+			Initialize.e.setWait(500);
 		}
 		
 		Initialize.pw.setWait(17);
 	}
 	
-	public void setWait() {
+	public void setWait(int x) {
 		synchronized(this) {
 			try {
 				synchronized(Initialize.e) {
-					this.wait();
+					this.wait(x);
 				}
             } catch (InterruptedException e)  {
                 Thread.currentThread().interrupt(); 

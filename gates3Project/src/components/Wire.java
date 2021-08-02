@@ -20,7 +20,11 @@ public class Wire extends Component {
 	private Spot tempSpot = null;
 	private boolean xAxis = true;
 	
+	//Used to check if there is a loop
+	private boolean used;
+	
 	public Wire(Node inputNode, Environment e) {
+		this.used = false;
 		this.inputNode = inputNode;
 		this.powered = inputNode.isPowered();
 		this.spots.add(inputNode.getSpot());
@@ -88,6 +92,11 @@ public class Wire extends Component {
 				Initialize.pw.addNext(outputNode);
 			}
 		}
+		
+		if(this.used)
+			System.out.println("LOOP!");
+		else
+			this.used = true;
 	}
 	
 	@Override
@@ -276,6 +285,14 @@ public class Wire extends Component {
 
 	public void setEnvironment(Environment e) {
 		this.e = e;
+	}
+
+	public boolean isUsed() {
+		return used;
+	}
+
+	public void setUsed(boolean used) {
+		this.used = used;
 	}
 
 	@Override

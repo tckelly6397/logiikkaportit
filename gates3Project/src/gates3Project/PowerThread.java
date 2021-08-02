@@ -5,11 +5,12 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import components.Component;
+import components.Wire;
 
 public class PowerThread implements Runnable {
 	private volatile CopyOnWriteArrayList<Component> nextList = new CopyOnWriteArrayList<>();
 	private volatile AtomicBoolean inUse = new AtomicBoolean(false);
-	private int wait = 150;
+	private int wait = 17;
 	
 	@Override
 	public void run() {
@@ -17,6 +18,11 @@ public class PowerThread implements Runnable {
 			if(nextList.isEmpty()) {
 				synchronized(Initialize.e) {
 					Initialize.e.notify();
+					
+					synchronized(Initialize.e.getWires()) {
+						for(Wire w : Initialize.e.getWires())
+							w.setUsed(false);
+					}
 				}
 			}
 			
