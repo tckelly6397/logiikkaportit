@@ -15,9 +15,10 @@ public class ChipButton extends Button {
 	@Override
 	public void leftClick(int x, int y) {
 		if(getCollision(x, y)) {
-			Chip newC = c.getNewChip();
+			Chip newC = Initialize.e.createChip(c.getAllNodes(), c.getInputNodes(), c.getOutputNodes(), c.getLabel(), c.getColor());
 			Initialize.e.addChip(newC);
-			newC.update();
+			Initialize.pw.addNext(newC);
+			newC.neutralize();
 		}
 		
 	}

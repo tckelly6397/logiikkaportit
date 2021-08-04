@@ -33,6 +33,6 @@ public class NotGateChip extends Chip{
 	
 	public void updateOutput() {
 		getOutputNodes().get(0).setPowered(!getInputNodes().get(0).isPowered());
-		getOutputNodes().get(0).update();
+		Initialize.pw.addNext(getOutputNodes().get(0));
 	}
 }

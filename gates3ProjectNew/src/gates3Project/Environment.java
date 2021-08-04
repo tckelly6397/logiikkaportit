@@ -116,8 +116,8 @@ public class Environment extends JPanel {
 		frame.repaint();
 	}
 	
-	public void createChip() {
-		BasicChip ch = new BasicChip(400, 200, createChipUI.getColor(), Initialize.e, createChipUI.getNameLabel().getLabel());
+	public Chip createChip(ArrayList<Node> allNodes, ArrayList<Node> firstInputNodes, ArrayList<Node> firstOutputNodes, String name, Color color) {
+		BasicChip ch = new BasicChip(400, 200, color, Initialize.e, name);
 
 		//Deep cloning
 		ArrayList<Node> inputNodes = new ArrayList<>();
@@ -125,23 +125,23 @@ public class Environment extends JPanel {
 		ArrayList<Node> nodes = new ArrayList<>();
 		
 		//set input nodes and output wires
-		for(int i = 0; i < Node.getAllNodes().size(); i++) {
-			Node newNode = new Node(Node.getAllNodes().get(i));
+		for(int i = 0; i < allNodes.size(); i++) {
+			Node newNode = new Node(allNodes.get(i));
 			newNode.setSize(20);
 			
-			for(Node inputN : Initialize.e.getInputNodes()) {
-				if(Node.getAllNodes().get(i) == inputN) {
+			for(Node inputN : firstInputNodes) {
+				if(allNodes.get(i) == inputN) {
 					inputNodes.add(newNode);
 				}
 			}
 			
-			for(Node inputN : Initialize.e.getOutputNodes()) {
-				if(Node.getAllNodes().get(i) == inputN) {
+			for(Node inputN : firstOutputNodes) {
+				if(allNodes.get(i) == inputN) {
 					outputNodes.add(newNode);
 				}
 			}
 			
-			ArrayList<Wire> wires = Node.getAllNodes().get(i).getWires(); 
+			ArrayList<Wire> wires = allNodes.get(i).getWires(); 
 			for(int l = 0; l < wires.size(); l++) {
 				Wire newWire = new Wire(newNode, Initialize.e);
 				newNode.addWire(newWire);				
@@ -151,16 +151,16 @@ public class Environment extends JPanel {
 		}
 		
 		//set input wires
-		for(int i = 0; i < Node.getAllNodes().size(); i++) {
-			Node n = Node.getAllNodes().get(i);
+		for(int i = 0; i < allNodes.size(); i++) {
+			Node n = allNodes.get(i);
 			
 			//Set the not gate
 			if(n.getC() != null && n.getC().getClass() == NotGateChip.class) {
-				for(int j = 0; j < Node.getAllNodes().size(); j++) {
-					Node n2 = Node.getAllNodes().get(j);
+				for(int j = 0; j < allNodes.size(); j++) {
+					Node n2 = allNodes.get(j);
 					
 					if(n2 == n.getC().getOutputNodes().get(0)) {
-						Chip c = Node.getAllNodes().get(i).getC();
+						Chip c = allNodes.get(i).getC();
 						NotGateChip notGateChip = new NotGateChip(c);
 						notGateChip.setInputNodes(new ArrayList<Node>());
 						notGateChip.setOutputNodes(new ArrayList<Node>());
@@ -172,8 +172,8 @@ public class Environment extends JPanel {
 				}
 			}
 			
-			for(int j = 0; j < Node.getAllNodes().size(); j++) {
-				Node n2 = Node.getAllNodes().get(j);
+			for(int j = 0; j < allNodes.size(); j++) {
+				Node n2 = allNodes.get(j);
 				
 				for(int k = 0; k < n.getWires().size(); k++) {
 					Wire w = n.getWires().get(k);
@@ -193,13 +193,12 @@ public class Environment extends JPanel {
 		ch.setAllNodes(nodes);
 		ch.setInputNodes(inputNodes);
 		ch.setOutputNodes(outputNodes);
-	    Initialize.e.getDropList().getButtons().add(new ChipButton(new Spot(0, 0), ch));
+		return ch;
+	}
+	
+	public void createChipButton() {
+		Initialize.e.getDropList().getButtons().add(new ChipButton(new Spot(0, 0), createChip(Node.getAllNodes(), Initialize.e.getInputNodes(), Initialize.e.getOutputNodes(), createChipUI.getNameLabel().getLabel(), createChipUI.getColor())));
 		Initialize.e.getDropList().setButtonLocations();
-		
-		setInputsFalse();
-		for(Node n : inputNodes) {
-			n.update();
-		}
 	}
 	
 	public void setWait(int x) {

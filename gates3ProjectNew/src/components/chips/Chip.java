@@ -46,9 +46,9 @@ public abstract class Chip extends Component {
 		this.e = c.getEnvironment();
 		this.label = c.label;
 		
-		this.allNodes = new ArrayList<Node>(c.getAllNodes());
-		this.inputNodes = new ArrayList<Node>(c.getInputNodes());
-		this.outputNodes = new ArrayList<Node>(c.getOutputNodes());
+		//this.allNodes = new ArrayList<Node>(c.getAllNodes());
+		//this.inputNodes = new ArrayList<Node>(c.getInputNodes());
+		//this.outputNodes = new ArrayList<Node>(c.getOutputNodes());
 		setHeight();
 		setNodeLocations();
 	}
@@ -159,6 +159,23 @@ public abstract class Chip extends Component {
 			c.setOffsetX(0);
 			c.setOffsetY(0);
 		}
+	}
+	
+	public void neutralize() {
+		for(Node n : inputNodes) {
+			n.setPowered(true);
+			Initialize.pw.addNext(n);
+		}
+		
+		for(Node n : inputNodes) {
+			n.setPowered(false);
+			//Initialize.pw.addNext(n);
+		}
+		
+		//for(Node n : inputNodes) {
+			//n.setPowered(false);
+			//Initialize.pw.addNext(n);
+		//}
 	}
 
 	public ArrayList<Node> getInputNodes() {

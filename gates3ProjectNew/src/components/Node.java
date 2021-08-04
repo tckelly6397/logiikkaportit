@@ -51,9 +51,6 @@ public class Node extends Component {
 		this.clickable = n.isClickable();
 		this.e = n.getEnvironment();	
 		this.powered = false;
-		
-		//this.wires = n.getWires();
-		//this.inputWires = n.getInputWires();
 	}
 	
 	public void draw(Graphics g) {

@@ -9,7 +9,7 @@ import components.Component;
 public class PowerThread implements Runnable {
 	private volatile CopyOnWriteArrayList<Component> nextList = new CopyOnWriteArrayList<>();
 	private volatile AtomicBoolean inUse = new AtomicBoolean(false);
-	private int wait = 17;
+	private int wait = 0;
 	
 	@Override
 	public void run() {
@@ -55,7 +55,7 @@ public class PowerThread implements Runnable {
 			this.nextList.add(next);
 		}
 	}
-	
+
 	public void setWait(int wait) {
 		this.wait = wait;
 	}

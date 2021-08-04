@@ -1,6 +1,7 @@
 package components.chips;
 
 import java.awt.Color;
+import java.util.ArrayList;
 
 import components.Node;
 import gates3Project.Environment;
@@ -18,12 +19,16 @@ public class BasicChip extends Chip {
 
 	@Override
 	public Chip getNewChip() {
-		return new BasicChip(this);
+		BasicChip bc = new BasicChip(this);
+		bc.setAllNodes(new ArrayList<Node>(this.getAllNodes()));
+		bc.setInputNodes(new ArrayList<Node>(this.getInputNodes()));
+		bc.setOutputNodes(new ArrayList<Node>(this.getOutputNodes()));
+		return bc;
 	}
 	
 	@Override
 	public void update() {	
-		for(Node n : getOutputNodes()) {
+		for(Node n : getInputNodes()) {
 			Initialize.pw.addNext(n);
 		}
 	}

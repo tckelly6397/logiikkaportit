@@ -6,7 +6,7 @@ public class CreateCommand implements Command {
 
 	@Override
 	public void Execute() {
-		Initialize.e.createChip();
+		Initialize.e.createChipButton();
 	}
 
 }
