@@ -11,6 +11,7 @@ import components.Node;
 import gates3Project.Environment;
 import gates3Project.Initialize;
 import utils.Spot;
+import utils.Tools;
 
 public abstract class Chip extends Component {
 	private ArrayList<Node> inputNodes = new ArrayList<>();
@@ -29,6 +30,7 @@ public abstract class Chip extends Component {
 	
 	public abstract Chip getNewChip();
 	public abstract void update();
+	public abstract void save();
 	
 	public Chip(int x, int y, Color c, Environment e, String label) {
 		this.location = new Spot(x, y);
@@ -46,9 +48,6 @@ public abstract class Chip extends Component {
 		this.e = c.getEnvironment();
 		this.label = c.label;
 		
-		//this.allNodes = new ArrayList<Node>(c.getAllNodes());
-		//this.inputNodes = new ArrayList<Node>(c.getInputNodes());
-		//this.outputNodes = new ArrayList<Node>(c.getOutputNodes());
 		setHeight();
 		setNodeLocations();
 	}
@@ -60,7 +59,7 @@ public abstract class Chip extends Component {
 		g.setColor(color);
 		
 		if(getHovered()) {
-			g.setColor(new Color(clamp(g.getColor().getRed() + 50, 255), clamp(g.getColor().getGreen() + 50, 255), clamp(g.getColor().getBlue() + 50, 255)));
+			g.setColor(new Color(Tools.clamp(g.getColor().getRed() + 50, 255), Tools.clamp(g.getColor().getGreen() + 50, 255), Tools.clamp(g.getColor().getBlue() + 50, 255)));
 		}
 			
 		g.fillRoundRect(x, y, WIDTH, HEIGHT, 15, 15);
@@ -107,8 +106,10 @@ public abstract class Chip extends Component {
 		}
 		
 		for(int i = 0; i < outputNodes.size(); i++) {
-			int defSize = 20;
-			int h = y + (HEIGHT / 2) - ((defSize + 5) * i) + ((defSize + 5) * outputNodes.size() / 2) - ((defSize + 5) / 2);
+			int h = y + (HEIGHT / 2) - (HEIGHT / outputNodes.size() * i);
+			if(outputNodes.size() > 1)
+				h += (HEIGHT / 2) - (HEIGHT / outputNodes.size() / 2);
+			
 			outputNodes.get(i).setSpot(new Spot(x + WIDTH, h));
 		}
 	}
@@ -161,30 +162,12 @@ public abstract class Chip extends Component {
 		}
 	}
 	
-	public void neutralize() {
-		for(Node n : inputNodes) {
-			n.setPowered(true);
-			Initialize.pw.addNext(n);
-		}
-		
-		for(Node n : inputNodes) {
-			n.setPowered(false);
-			//Initialize.pw.addNext(n);
-		}
-		
-		//for(Node n : inputNodes) {
-			//n.setPowered(false);
-			//Initialize.pw.addNext(n);
-		//}
-	}
-
 	public ArrayList<Node> getInputNodes() {
 		return inputNodes;
 	}
 
 	public void setInputNodes(ArrayList<Node> inputNodes) {
 		this.inputNodes = inputNodes;
-		//this.allNodes.addAll(inputNodes);
 	}
 	
 	public void addInput(Node n) {
@@ -193,13 +176,11 @@ public abstract class Chip extends Component {
 	}
 
 	public ArrayList<Node> getOutputNodes() {
-		//updateOutput();
 		return outputNodes;
 	}
 
 	public void setOutputNodes(ArrayList<Node> outputNodes) {
 		this.outputNodes = outputNodes;
-		//this.allNodes.addAll(outputNodes);
 	}
 	
 	public void addOutput(Node n) {

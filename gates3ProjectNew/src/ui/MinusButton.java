@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import components.Node;
 import utils.Spot;
+import utils.Tools;
 
 public class MinusButton extends Button {
 	ArrayList<Node> nodes;
@@ -25,7 +26,7 @@ public class MinusButton extends Button {
 		
 		g.setColor(Color.BLACK);
 		if(getHovered()) {
-			g.setColor(new Color(clamp(g.getColor().getRed() + 20, 255), clamp(g.getColor().getGreen() + 20, 255), clamp(g.getColor().getBlue() + 20, 255)));
+			g.setColor(new Color(Tools.clamp(g.getColor().getRed() + 20, 255), Tools.clamp(g.getColor().getGreen() + 20, 255), Tools.clamp(g.getColor().getBlue() + 20, 255)));
 		}
 		
 		g.fillRect(x, y + (getHEIGHT() / 2) - (thickness / 2), getWIDTH(), thickness);

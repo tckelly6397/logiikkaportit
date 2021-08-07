@@ -33,6 +33,11 @@ public class NotGateChip extends Chip{
 	
 	public void updateOutput() {
 		getOutputNodes().get(0).setPowered(!getInputNodes().get(0).isPowered());
-		Initialize.pw.addNext(getOutputNodes().get(0));
+		this.getEnvironment().getPowerThread().addNext(getOutputNodes().get(0));
+	}
+	
+	@Override
+	public void save() {
+		System.out.println("Not necessary for not chips due to them being initially created.");
 	}
 }

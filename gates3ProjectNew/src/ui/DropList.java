@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 
 import utils.Spot;
+import utils.Tools;
 
 public class DropList {
 	private Spot location;
@@ -28,11 +29,6 @@ public class DropList {
 		this.maxShown = 5;
 		this.hovered = false;
 		this.opened = false;
-	    
-		//for(int i = 0; i < 1; i++) {
-			//Color c = new Color((int)(Math.random() * 255), (int)(Math.random() * 255), (int)(Math.random() * 255));
-			//buttons.add(new Button(new Spot(x, y + (i * 50) + HEIGHT), 150, 50, c, ""));
-		//}
 		
 		setButtonLocations();
 	}
@@ -47,12 +43,12 @@ public class DropList {
 		
 		g.setColor(new Color(180, 180, 180));
 		if(hovered)
-			g.setColor(new Color(clamp(g.getColor().getRed() + 20, 255), clamp(g.getColor().getGreen() + 20, 255), clamp(g.getColor().getBlue() + 20, 255)));
+			g.setColor(new Color(Tools.clamp(g.getColor().getRed() + 20, 255), Tools.clamp(g.getColor().getGreen() + 20, 255), Tools.clamp(g.getColor().getBlue() + 20, 255)));
 		g.fillRoundRect(x + border, y + border, WIDTH - (border * 2), HEIGHT - (border * 2), 5, 5);
 		
 		g.setColor(Color.BLACK);
 		if(hovered)
-			g.setColor(new Color(clamp(g.getColor().getRed() + 20, 255), clamp(g.getColor().getGreen() + 20, 255), clamp(g.getColor().getBlue() + 20, 255)));
+			g.setColor(new Color(Tools.clamp(g.getColor().getRed() + 20, 255), Tools.clamp(g.getColor().getGreen() + 20, 255), Tools.clamp(g.getColor().getBlue() + 20, 255)));
 		g.setFont(new Font("Verdana", Font.BOLD, HEIGHT - border - 2));
 		g.drawString("CHIPS", x + border, y + border + (HEIGHT - (border * 2) - 1));
 		
@@ -76,11 +72,6 @@ public class DropList {
 		for(int i = scrollPosition; i < max; i++) {
 			buttons.get(i).draw(g);
 		}
-	}
-	
-	public int clamp(int num, int max) {
-		if(num > max) return max;
-		return num;
 	}
 	
 	public void executeHovered(int x, int y) {
@@ -108,8 +99,11 @@ public class DropList {
 		if(max > buttons.size()) //This can cause a problem, if not then remove this
 			max = buttons.size();
 		
-		for(int i = scrollPosition; i < max; i++) {
-			buttons.get(i).setLocation(new Spot(location.getXAsInt(), location.getYAsInt() + ((i - scrollPosition) * 50) + HEIGHT));
+		for(int i = 0; i < buttons.size(); i++) {
+			if(i < scrollPosition || i > max) {
+				buttons.get(i).setLocation(new Spot(-5000, 0));
+			} else
+				buttons.get(i).setLocation(new Spot(location.getXAsInt(), location.getYAsInt() + ((i - scrollPosition) * 50) + HEIGHT));
 		}
 	}
 	

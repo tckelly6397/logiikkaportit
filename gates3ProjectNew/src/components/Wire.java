@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import gates3Project.Environment;
 import gates3Project.Initialize;
 import utils.Spot;
+import utils.Tools;
 
 public class Wire extends Component {
 	private ArrayList<Spot> spots = new ArrayList<>();
@@ -41,7 +42,7 @@ public class Wire extends Component {
 			g.setColor(new Color(255, 0, 0));
 		
 		if(getHovered())
-			g.setColor(new Color(clamp(g.getColor().getRed() + 20, 255), clamp(g.getColor().getGreen() + 20, 255), clamp(g.getColor().getBlue() + 20, 255)));
+			g.setColor(new Color(Tools.clamp(g.getColor().getRed() + 20, 255), Tools.clamp(g.getColor().getGreen() + 20, 255), Tools.clamp(g.getColor().getBlue() + 20, 255)));
 		
 		g2d.setStroke(new BasicStroke(w, 1, 1));
 		
@@ -89,7 +90,7 @@ public class Wire extends Component {
 			
 			if(!keepPowered || powered) {
 				outputNode.setPowered(powered);
-				Initialize.pw.addNext(outputNode);
+				Initialize.e.getPowerThread().addNext(outputNode);
 			}
 		}
 	}

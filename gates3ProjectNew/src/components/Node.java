@@ -9,6 +9,7 @@ import components.chips.NotGateChip;
 import gates3Project.Environment;
 import gates3Project.Initialize;
 import utils.Spot;
+import utils.Tools;
 
 public class Node extends Component {
 	private Spot spot;
@@ -60,19 +61,19 @@ public class Node extends Component {
 			g.setColor(new Color(255, 0, 0));
 		
 		if(getHovered())
-			g.setColor(new Color(clamp(g.getColor().getRed() + 20, 255), clamp(g.getColor().getGreen() + 20, 255), clamp(g.getColor().getBlue() + 20, 255)));
+			g.setColor(new Color(Tools.clamp(g.getColor().getRed() + 20, 255), Tools.clamp(g.getColor().getGreen() + 20, 255), Tools.clamp(g.getColor().getBlue() + 20, 255)));
 			
 		g.fillOval(spot.getXAsInt() - (size / 2), spot.getYAsInt() - (size / 2), size, size);
 	}
 	
 	public void update() {
 		if(c != null && c instanceof NotGateChip) {
-			Initialize.pw.addNext(c);
+			e.getPowerThread().addNext(c);
 		}
 		
 		for(Wire w : wires) {
 			w.setPowered(powered);
-			Initialize.pw.addNext(w);
+			e.getPowerThread().addNext(w);
 		}
 		
 		if(c != null && inputWires.isEmpty())
@@ -91,8 +92,6 @@ public class Node extends Component {
 		ArrayList<Node> nodes = new ArrayList<>(Initialize.e.getInputNodes());
 		nodes.addAll(Initialize.e.getOutputNodes());
 		for(Chip c : Initialize.e.getChips()) {
-			//nodes.addAll(c.getInputNodes());
-			//nodes.addAll(c.getOutputNodes());
 			nodes.addAll(c.getAllNodes());
 		}
 		
@@ -116,7 +115,7 @@ public class Node extends Component {
 		if(node != null) {
 				if(node.isClickable()) {
 					node.switchPowered();
-					Initialize.pw.addNext(node);
+					node.getEnvironment().getPowerThread().addNext(node);
 				}
 				
 				//Connect node
@@ -138,7 +137,6 @@ public class Node extends Component {
 								w.getSpots().add(new Spot(last.getX(), last.getY()));
 							
 							w.getSpots().get(w.getSpots().size() - 1).setSpot(last);
-							//	w.addSpot(new Spot(last.getX(), last.getY()));
 						}
 						
 						w.getSpots().add(node.getSpot());

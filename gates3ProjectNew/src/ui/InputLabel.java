@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 
 import utils.Spot;
+import utils.Tools;
 
 public class InputLabel {
 	private Spot location;
@@ -47,7 +48,7 @@ public class InputLabel {
 			maxString += "W";
 		g.setColor(Color.BLACK);
 		if(getHovered())
-			g.setColor(new Color(clamp(g.getColor().getRed() + 20, 255), clamp(g.getColor().getGreen() + 20, 255), clamp(g.getColor().getBlue() + 20, 255)));
+			g.setColor(new Color(Tools.clamp(g.getColor().getRed() + 20, 255), Tools.clamp(g.getColor().getGreen() + 20, 255), Tools.clamp(g.getColor().getBlue() + 20, 255)));
 		
 		WIDTH = g.getFontMetrics(f).stringWidth(maxString) + 8;
 		g.drawRect(location.getXAsInt() - 8, location.getYAsInt() - HEIGHT + 3, g.getFontMetrics(f).stringWidth(maxString) + 8, HEIGHT + 6);
@@ -65,11 +66,6 @@ public class InputLabel {
 		
 		g.setColor(Color.RED);
 		g.drawRect(x + location.getXAsInt() + w, location.getYAsInt() - HEIGHT + 5, 2, HEIGHT - 5);
-	}
-	
-	public int clamp(int num, int max) {
-		if(num > max) return max;
-		return num;
 	}
 	
 	public Boolean leftClick(int x, int y) {

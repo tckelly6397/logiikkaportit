@@ -6,6 +6,7 @@ import java.awt.Graphics;
 
 import utils.Command;
 import utils.Spot;
+import utils.Tools;
 
 public class Button {
 	private Spot location;
@@ -33,22 +34,17 @@ public class Button {
 		g.setColor(c);
 		
 		if(getHovered()) {
-			g.setColor(new Color(clamp(g.getColor().getRed() + 50, 255), clamp(g.getColor().getGreen() + 50, 255), clamp(g.getColor().getBlue() + 50, 255)));
+			g.setColor(new Color(Tools.clamp(g.getColor().getRed() + 50, 255), Tools.clamp(g.getColor().getGreen() + 50, 255), Tools.clamp(g.getColor().getBlue() + 50, 255)));
 		}
 		
 		g.fillRect(x, y, WIDTH, HEIGHT);
 		
 		g.setColor(Color.BLACK);
 		if(getHovered()) {
-			g.setColor(new Color(clamp(g.getColor().getRed() + 50, 255), clamp(g.getColor().getGreen() + 50, 255), clamp(g.getColor().getBlue() + 50, 255)));
+			g.setColor(new Color(Tools.clamp(g.getColor().getRed() + 50, 255), Tools.clamp(g.getColor().getGreen() + 50, 255), Tools.clamp(g.getColor().getBlue() + 50, 255)));
 		}
 		g.setFont(new Font("Verdana", Font.BOLD, HEIGHT - 5));
 		g.drawString(label, x + 5, y + 5 + (HEIGHT - (5 * 2) - (HEIGHT / 20)));
-	}
-	
-	public int clamp(int num, int max) {
-		if(num > max) return max;
-		return num;
 	}
 	
 	public void executeHovered(int x, int y) {

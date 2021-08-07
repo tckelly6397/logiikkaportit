@@ -17,8 +17,8 @@ public class ChipButton extends Button {
 		if(getCollision(x, y)) {
 			Chip newC = Initialize.e.createChip(c.getAllNodes(), c.getInputNodes(), c.getOutputNodes(), c.getLabel(), c.getColor());
 			Initialize.e.addChip(newC);
-			Initialize.pw.addNext(newC);
-			newC.neutralize();
+			Initialize.e.getPowerThread().addNext(newC);
+			newC.update();
 		}
 		
 	}

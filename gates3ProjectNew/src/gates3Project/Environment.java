@@ -16,16 +16,16 @@ import components.chips.Chip;
 import components.chips.NotGateChip;
 import peripherals.MainKeyHandler;
 import peripherals.MainMouseHandler;
-import ui.ChangeNodesUI;
 import ui.ChipButton;
-import ui.CreateChipUI;
 import ui.DropList;
+import ui.frames.ChangeNodesUI;
+import ui.frames.CreateChipUI;
 import utils.Spot;
 
 @SuppressWarnings("serial")
 public class Environment extends JPanel {
 	private JFrame frame = new JFrame("Gate");
-	private volatile PowerThread pw = Initialize.pw;
+	private volatile PowerThread pw;
 	private MainMouseHandler mouseHandler = new MainMouseHandler();
 	private MainKeyHandler keyHandler = new MainKeyHandler();
 	
@@ -39,9 +39,6 @@ public class Environment extends JPanel {
 	private ChangeNodesUI changeNodesUI;
 	
 	public void paintComponent(Graphics g) {
-		for(Chip c : chips)
-			c.draw(g);
-		
 		for(Wire w : wires)
 			w.draw(g);
 		
@@ -49,6 +46,9 @@ public class Environment extends JPanel {
 			if(w.isPowered())
 				w.draw(g);
 		}
+		
+		for(Chip c : chips)
+			c.draw(g);
 		
 		g.setColor(new Color(80, 80, 80));
 		Graphics2D g2d = (Graphics2D)g;
@@ -77,6 +77,13 @@ public class Environment extends JPanel {
 	    frame.setSize(WIDTH, HEIGHT);
 	    frame.setVisible(true);  
 	    frame.add(this);
+	    
+	    pw = new PowerThread();
+	}
+	
+	public void beginPowerThread() {
+		Thread t1 = new Thread(pw);
+		t1.start();
 	}
 	
 	public void run() {
@@ -131,6 +138,7 @@ public class Environment extends JPanel {
 			
 			for(Node inputN : firstInputNodes) {
 				if(allNodes.get(i) == inputN) {
+					newNode.setClickable(false);
 					inputNodes.add(newNode);
 				}
 			}
@@ -197,8 +205,10 @@ public class Environment extends JPanel {
 	}
 	
 	public void createChipButton() {
-		Initialize.e.getDropList().getButtons().add(new ChipButton(new Spot(0, 0), createChip(Node.getAllNodes(), Initialize.e.getInputNodes(), Initialize.e.getOutputNodes(), createChipUI.getNameLabel().getLabel(), createChipUI.getColor())));
+		Chip chip = createChip(Node.getAllNodes(), Initialize.e.getInputNodes(), Initialize.e.getOutputNodes(), createChipUI.getNameLabel().getLabel(), createChipUI.getColor());
+		Initialize.e.getDropList().getButtons().add(new ChipButton(new Spot(0, 0), chip));
 		Initialize.e.getDropList().setButtonLocations();
+		chip.save();
 	}
 	
 	public void setWait(int x) {

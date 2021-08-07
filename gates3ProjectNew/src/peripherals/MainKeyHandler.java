@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
+import components.Node;
 import gates3Project.Initialize;
 import ui.InputLabel;
 
@@ -18,6 +19,10 @@ public class MainKeyHandler implements KeyListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		ArrayList<InputLabel> labels = Initialize.e.getCreateChipUI().getLabels();
+		
+		if(e.getKeyCode() == KeyEvent.VK_M) {
+			System.out.println(Node.getAllNodes().size());
+		}
 		
 		for(InputLabel il : labels) {
 			if(e.getKeyCode() == KeyEvent.VK_RIGHT && il.getSelected())

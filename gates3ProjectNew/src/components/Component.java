@@ -5,12 +5,8 @@ import java.util.ArrayList;
 public abstract class Component {
 	public abstract void update();
 	public abstract Boolean getCollision(int x, int y);
-	private Boolean hovered = false;
 	
-	public int clamp(int num, int max) {
-		if(num > max) return max;
-		return num;
-	}
+	private Boolean hovered = false;
 	
 	public static void executeHovered(int x, int y, ArrayList<Component> components) {
 		for(Component c : components) {

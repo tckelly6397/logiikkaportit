@@ -1,0 +1,18 @@
+{Label:AND, Color:[255, 5, 75], InputIds:[0, 1], OutputIds:[2]}
+{Label:node, id:0, inputIds:[], outputIds:[9], powered:false, ngId:-1}
+{Label:node, id:1, inputIds:[], outputIds:[10], powered:false, ngId:-1}
+{Label:node, id:2, inputIds:[13], outputIds:[], powered:false, ngId:-1}
+{Label:node, id:3, inputIds:[10], outputIds:[], powered:false, ngId:14}
+{Label:node, id:4, inputIds:[], outputIds:[11], powered:false, ngId:-1}
+{Label:node, id:5, inputIds:[9], outputIds:[], powered:false, ngId:15}
+{Label:node, id:6, inputIds:[], outputIds:[12], powered:false, ngId:-1}
+{Label:node, id:7, inputIds:[11,12], outputIds:[], powered:false, ngId:16}
+{Label:node, id:8, inputIds:[], outputIds:[13], powered:false, ngId:-1}
+{Label:wire, id:9, inputIds:[0], outputIds:[5], powered:false, ngId:-1}
+{Label:wire, id:10, inputIds:[1], outputIds:[3], powered:false, ngId:-1}
+{Label:wire, id:11, inputIds:[4], outputIds:[7], powered:false, ngId:-1}
+{Label:wire, id:12, inputIds:[6], outputIds:[7], powered:false, ngId:-1}
+{Label:wire, id:13, inputIds:[8], outputIds:[2], powered:false, ngId:-1}
+{Label:noteGate, id:14, inputIds:[3], outputIds:[4], powered:false, ngId:-1}
+{Label:noteGate, id:15, inputIds:[5], outputIds:[6], powered:false, ngId:-1}
+{Label:noteGate, id:16, inputIds:[7], outputIds:[8], powered:false, ngId:-1}

@@ -1,46 +1,30 @@
 package gates3Project;
 
 import java.awt.Color;
+import java.util.ArrayList;
 
 import components.Node;
 import components.chips.NotGateChip;
-import ui.ChangeNodesUI;
 import ui.ChipButton;
-import ui.CreateChipUI;
 import ui.DropList;
+import ui.frames.ChangeNodesUI;
+import ui.frames.CreateChipUI;
 import utils.Spot;
+import utils.Tools;
 
 public class Initialize {
 	public static volatile Environment e;
-	public static volatile PowerThread pw;
 	
 	public static void main(String[] args) {
-		pw = new PowerThread();
-		Thread t1 = new Thread(pw);
-		
 		e = new Environment(1400, 800);
 		e.setDropList(new DropList(200, 80));
 		e.setCreateChipUI(new CreateChipUI(60, 110, 600, 34));
 		e.setChangeNodesUI(new ChangeNodesUI());
 		
-		/*/NOT GATE
-		Chip ch = new Chip(400, 200, Color.GREEN, Initialize.e, "NOT");
-	    TruthTable tb = new TruthTable();
-	    tb.addTruth(new Boolean[]{true}, new Boolean[]{false});
-	    tb.addTruth(new Boolean[]{false}, new Boolean[]{true});
-	    ch.setTable(tb);
-	    ch.addInput(new Node(0, 0, 20, false, ch, Initialize.e));
-	    ch.addOutput(new Node(0, 0, 20, false, Initialize.e));
-	    ch.setNodeLocations();
-	    
-	    e.getDropList().getButtons().add(new ChipButton(new Spot(0, 0), ch));
-	    //END OF NOT GATE
-	     */
-		
 		NotGateChip ch = new NotGateChip(400, 200, Color.GREEN, Initialize.e, "NOT");
 		ch.addInput(new Node(0, 0, 20, false, ch, Initialize.e));
 	    ch.addOutput(new Node(0, 0, 20, false, Initialize.e));
-	    //ch.setIsNotChip(true);
+
 		e.getDropList().getButtons().add(new ChipButton(new Spot(0, 0), ch));
 	    
 	    int defSize = 30;
@@ -53,9 +37,16 @@ public class Initialize {
 	    for(int i = 0; i < 1; i++) {
 	    	e.addOutputNode(new Node(0, 0, defSize, false, e));
 	    }
+
 	    
-	    t1.start();
-	    
+		//Loading chips
+		ArrayList<ArrayList<String>> chips = Tools.readChipFiles();
+		
+		for(ArrayList<String> c : chips) {
+			Tools.createChip(c);
+		}
+		
+	    e.beginPowerThread();
 	    e.run();
 	}
 }
