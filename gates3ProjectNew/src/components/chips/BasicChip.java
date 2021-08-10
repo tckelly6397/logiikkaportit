@@ -67,6 +67,7 @@ public class BasicChip extends Chip {
 			if(comp.getClass() == Node.class) {
 				pso.setLabel("node");
 				pso.setPowered(((Node)comp).isPowered());
+				pso.setClock(((Node)comp).isClock());
 			}else if(comp.getClass() == Wire.class) {
 				pso.setLabel("wire");
 				pso.setPowered(((Wire)comp).isPowered());

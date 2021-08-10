@@ -22,7 +22,7 @@ public class Tools {
 		return num;
 	}
 	
-	//Return an arraylist of string arrays
+	//Return an ArrayList of string arrays
 	//I hope for the rest of my life that I will never have to look at this again.
 	//Up till 5 am and then waking up at 11, working on it till 2 just to get this working and
 	//As of now I probably can't explain all of it.  I hate parsing strings.
@@ -109,6 +109,17 @@ public class Tools {
 		return chips;
 	}
 	
+	public static ArrayList<String> getChipFileNames() {
+		ArrayList<String> chipNames = new ArrayList<>();
+		
+		File folder = new File("chips");
+		for (final File fileEntry : folder.listFiles()) {
+			chipNames.add(fileEntry.getName());
+	    }
+		
+		return chipNames;
+	}
+	
 	public static Color getColorFromString(String s) {
 		Color color;
 		s = s.replace("[", "");
@@ -171,6 +182,12 @@ public class Tools {
 					else if(value1.equals("false"))
 						pso.setPowered(false);
 				
+				if(value0.equals("isClock"))
+					if(value1.equals("true"))
+						pso.setClock(true);
+					else if(value1.equals("false"))
+						pso.setClock(false);
+				
 				if(value0.equals("ngId")) 
 					pso.setNgId(Integer.parseInt(value1));
 				
@@ -195,6 +212,7 @@ public class Tools {
 				continue;
 			
 			Node newNode = new Node(0, 0, 20, false, Initialize.e);
+			newNode.setClock(pso.isClock());
 			
 			for(Integer i1 : getIntegerArrayFromString(info.get(2)[1])) {
 				if(i1 == pso.getId())

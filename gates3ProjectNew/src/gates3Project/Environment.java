@@ -18,9 +18,12 @@ import peripherals.MainKeyHandler;
 import peripherals.MainMouseHandler;
 import ui.ChipButton;
 import ui.DropList;
+import ui.Prompt;
+import ui.Rectangle;
 import ui.frames.ChangeNodesUI;
 import ui.frames.CreateChipUI;
 import utils.Spot;
+import utils.Tools;
 
 @SuppressWarnings("serial")
 public class Environment extends JPanel {
@@ -37,6 +40,8 @@ public class Environment extends JPanel {
 	private DropList dropList;
 	private CreateChipUI createChipUI;
 	private ChangeNodesUI changeNodesUI;
+	private Rectangle box;
+	private Prompt prompt;
 	
 	public void paintComponent(Graphics g) {
 		for(Wire w : wires)
@@ -54,7 +59,7 @@ public class Environment extends JPanel {
 		Graphics2D g2d = (Graphics2D)g;
 		g2d.setStroke(new BasicStroke(8, 1, 1));
 		
-		g.drawRect(60, 120, frame.getWidth() - 130, frame.getHeight() - 240);
+		box.draw(g);
 		
 		for(Node n : outputNodes)
 			n.draw(g);
@@ -65,6 +70,7 @@ public class Environment extends JPanel {
 		dropList.draw(g);
 		createChipUI.draw(g);
 		changeNodesUI.draw(g);
+		prompt.draw(g);
 	}
 	
 	public Environment(int WIDTH, int HEIGHT) {
@@ -78,7 +84,14 @@ public class Environment extends JPanel {
 	    frame.setVisible(true);  
 	    frame.add(this);
 	    
+	    box = new Rectangle(60, 120, frame.getWidth() - 130, frame.getHeight() - 240);
+	    prompt = new Prompt();
+	    
 	    pw = new PowerThread();
+	    
+	    NodeClockThread nct = new NodeClockThread();
+	    Thread thread = new Thread(nct);
+	    thread.start();
 	}
 	
 	public void beginPowerThread() {
@@ -117,6 +130,11 @@ public class Environment extends JPanel {
 		dropList.setLocation(new Spot(frame.getWidth() - 222, 80));
 		createChipUI.setLocation(new Spot(60, 110));
 		createChipUI.setWIDTH(frame.getWidth() - 130 - dropList.getWIDTH() - 20);
+		
+		box.setHEIGHT(frame.getHeight() - 240);
+		box.setWIDTH(frame.getWidth() - 130);
+		
+		prompt.updateLocation();
 		
 		changeNodesUI.updateLocations();
 		
@@ -205,10 +223,26 @@ public class Environment extends JPanel {
 	}
 	
 	public void createChipButton() {
+		if(chipNameTaken(createChipUI.getNameLabel().getLabel())) {
+			prompt.setShown(true);
+			prompt.setLabel("Duplicite Chip Names");
+			return;
+		}
+		
 		Chip chip = createChip(Node.getAllNodes(), Initialize.e.getInputNodes(), Initialize.e.getOutputNodes(), createChipUI.getNameLabel().getLabel(), createChipUI.getColor());
 		Initialize.e.getDropList().getButtons().add(new ChipButton(new Spot(0, 0), chip));
 		Initialize.e.getDropList().setButtonLocations();
 		chip.save();
+	}
+	
+	public boolean chipNameTaken(String name) {
+		ArrayList<String> names = Tools.getChipFileNames();
+		
+		for(String n : names)
+			if(name.equals(n))
+				return true;
+		
+		return false;
 	}
 	
 	public void setWait(int x) {
@@ -221,6 +255,10 @@ public class Environment extends JPanel {
                 Thread.currentThread().interrupt(); 
             }
 		}
+	}
+	
+	public void closePrompt() {
+		this.prompt.setShown(false);
 	}
 
 	public JFrame getFrame() {
@@ -310,6 +348,22 @@ public class Environment extends JPanel {
 	
 	public void setChangeNodesUI(ChangeNodesUI cnUI) {
 		this.changeNodesUI = cnUI;
+	}
+
+	public Rectangle getBox() {
+		return box;
+	}
+
+	public void setBox(Rectangle box) {
+		this.box = box;
+	}
+	
+	public Prompt getPrompt() {
+		return prompt;
+	}
+
+	public void setPrompt(Prompt prompt) {
+		this.prompt = prompt;
 	}
 
 	@Override

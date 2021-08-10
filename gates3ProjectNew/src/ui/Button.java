@@ -16,6 +16,7 @@ public class Button {
 	private Color c;
 	private String label;
 	private Command command;
+	private int borderRadius;
 	
 	public Button(Spot location, int WIDTH, int HEIGHT, Color c, String label) {
 		super();
@@ -25,6 +26,7 @@ public class Button {
 		this.HEIGHT = HEIGHT;
 		this.hovered = false;
 		this.label = label;
+		this.borderRadius = 0;
 	}
 	
 	public void draw(Graphics g) {
@@ -37,7 +39,7 @@ public class Button {
 			g.setColor(new Color(Tools.clamp(g.getColor().getRed() + 50, 255), Tools.clamp(g.getColor().getGreen() + 50, 255), Tools.clamp(g.getColor().getBlue() + 50, 255)));
 		}
 		
-		g.fillRect(x, y, WIDTH, HEIGHT);
+		g.fillRoundRect(x, y, WIDTH, HEIGHT, borderRadius, borderRadius);
 		
 		g.setColor(Color.BLACK);
 		if(getHovered()) {
@@ -123,5 +125,13 @@ public class Button {
 
 	public void setCommand(Command command) {
 		this.command = command;
+	}
+
+	public int getBorderRadius() {
+		return borderRadius;
+	}
+
+	public void setBorderRadius(int borderRadius) {
+		this.borderRadius = borderRadius;
 	}
 }

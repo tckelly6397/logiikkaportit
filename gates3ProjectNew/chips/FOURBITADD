@@ -1,4 +1,4 @@
-{Label:FOURBITADD, Color:[85, 101, 33], InputIds:[0, 1, 2, 3, 4, 5, 6, 7, 8], OutputIds:[9, 10, 11, 12, 13]}
+{Label:4BITADDER, Color:[85, 101, 33], InputIds:[0, 1, 2, 3, 4, 5, 6, 7, 8], OutputIds:[9, 10, 11, 12, 13]}
 {Label:node, id:0, inputIds:[], outputIds:[558], powered:false, ngId:-1}
 {Label:node, id:1, inputIds:[], outputIds:[559], powered:false, ngId:-1}
 {Label:node, id:2, inputIds:[], outputIds:[560], powered:false, ngId:-1}

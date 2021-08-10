@@ -19,6 +19,7 @@ public class Node extends Component {
 	private ArrayList<Wire> wires = new ArrayList<>();
 	private ArrayList<Wire> inputWires = new ArrayList<>();
 	private boolean clickable;
+	private boolean clock;
 	private Chip c;
 	
 	public Node(int x, int y, int size, boolean clickable, Environment e) {
@@ -52,6 +53,7 @@ public class Node extends Component {
 		this.clickable = n.isClickable();
 		this.e = n.getEnvironment();	
 		this.powered = false;
+		this.clock = n.isClock();
 	}
 	
 	public void draw(Graphics g) {
@@ -268,6 +270,14 @@ public class Node extends Component {
 
 	public void setEnvironment(Environment e) {
 		this.e = e;
+	}
+
+	public boolean isClock() {
+		return clock;
+	}
+
+	public void setClock(boolean clock) {
+		this.clock = clock;
 	}
 
 	@Override

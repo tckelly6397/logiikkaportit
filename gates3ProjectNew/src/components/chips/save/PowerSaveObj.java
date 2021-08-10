@@ -8,6 +8,7 @@ public class PowerSaveObj {
 	private ArrayList<Integer> inputIds;
 	private ArrayList<Integer> outputIds;
 	private boolean powered;
+	private boolean isClock;
 	private int ngId; //Used for nodes
 	
 	public PowerSaveObj(int id) {
@@ -16,6 +17,7 @@ public class PowerSaveObj {
 		inputIds = new ArrayList<>();
 		outputIds = new ArrayList<>();
 		powered = false;
+		isClock = false;
 		ngId = -1;
 	}
 
@@ -75,6 +77,14 @@ public class PowerSaveObj {
 		this.ngId = ngId;
 	}
 	
+	public boolean isClock() {
+		return isClock;
+	}
+
+	public void setClock(boolean isClock) {
+		this.isClock = isClock;
+	}
+
 	public String getInputIdsString() {
 		String ids = "";
 		ids += "[";
@@ -118,6 +128,7 @@ public class PowerSaveObj {
 				", outputIds:" + getOutputIdsString() + 
 				", powered:" + powered +
 				", ngId:" + ngId +
+				", isClock:" + isClock +
 				"}";
 	}
 }

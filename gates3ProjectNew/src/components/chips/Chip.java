@@ -10,6 +10,7 @@ import components.Component;
 import components.Node;
 import gates3Project.Environment;
 import gates3Project.Initialize;
+import ui.Rectangle;
 import utils.Spot;
 import utils.Tools;
 
@@ -155,11 +156,47 @@ public abstract class Chip extends Component {
 	}
 	
 	public static void mouseReleased() {
+		//ArrayList for concurrent modification
+		ArrayList<Chip> destroyThese = new ArrayList<>();
+		
 		for(Chip c : Initialize.e.getChips()) {
 			c.setSelected(false);
 			c.setOffsetX(0);
 			c.setOffsetY(0);
+			
+			if(!c.isInPlay())
+				destroyThese.add(c);
 		}
+		
+		for(int i = destroyThese.size() - 1; i >= 0; i--)
+			destroyThese.get(i).destroy();
+	}
+	
+	public boolean isInPlay() {
+		int x1 = location.getXAsInt();
+		int y1 = location.getYAsInt();
+		int x2 = location.getXAsInt() + WIDTH;
+		int y2 = location.getYAsInt() + HEIGHT;
+		
+		Rectangle box = Initialize.e.getBox();
+		
+		int bx1 = box.getX();
+		int by1 = box.getY();
+		int bx2 = box.getX() + box.getWIDTH();
+		int by2 = box.getY() + box.getHEIGHT();
+		
+		if(x1 > bx1 && x2 < bx2 && y1 > by1 && y2 < by2)
+			return true;
+		
+		return false;
+	}
+	
+	public void destroy() {
+		for(Node n : allNodes) {
+			n.destroy(false, false);
+		}
+		
+		e.getChips().remove(this);
 	}
 	
 	public ArrayList<Node> getInputNodes() {

@@ -41,5 +41,13 @@ public class PlusButton extends Button {
 			nodes.add(new Node(0, 0, defSize, isInput, Initialize.e));
 		}
 	}
-
+	
+	public void middleClick(int x, int y) {
+		if(getCollision(x, y)) {
+			int defSize = 30;
+			Node n = new Node(0, 0, defSize, isInput, Initialize.e);
+			n.setClock(true);
+			nodes.add(n);
+		}
+	}
 }

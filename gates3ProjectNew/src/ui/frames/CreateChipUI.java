@@ -28,7 +28,7 @@ public class CreateChipUI {
 		btn = new Button(new Spot(x + WIDTH - btnWidth, y), btnWidth, HEIGHT, new Color(20, 180, 20), "CREATE");
 		btn.setCommand(new CreateCommand());
 		
-		nameLabel = new InputLabel(x + 8, y - 8, "", 200, HEIGHT, Color.WHITE, -1, 10, true, false);
+		nameLabel = new InputLabel(x + 8, y - 8, "", 200, HEIGHT, Color.WHITE, -1, 10, true, true);
 		redLabel = new InputLabel(x + nameLabel.getWIDTH(), y - 8, "" + (int)(Math.random() * 255), 200, HEIGHT, Color.RED, -1, 3, false, true);
 		greenLabel = new InputLabel(redLabel.getLocation().getXAsInt() + redLabel.getWIDTH(), y - 8, "" + (int)(Math.random() * 255), 200, HEIGHT, Color.GREEN, -1, 3, false, true);
 		blueLabel = new InputLabel(greenLabel.getLocation().getXAsInt() + greenLabel.getWIDTH(), y - 8, "" + (int)(Math.random() * 255), 200, HEIGHT, Color.BLUE, -1, 3, false, true);

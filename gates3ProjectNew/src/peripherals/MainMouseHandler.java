@@ -27,6 +27,7 @@ public class MainMouseHandler extends MouseAdapter {
 		Initialize.e.getDropList().executeHovered(x, y);
 		Initialize.e.getCreateChipUI().executeHovered(x, y);
 		Initialize.e.getChangeNodesUI().executeHovered(x, y);
+		Initialize.e.getPrompt().executeHovered(x, y);
 		//End of Hover Stuff
 		
 		//Wire Stuff
@@ -47,6 +48,7 @@ public class MainMouseHandler extends MouseAdapter {
 			Initialize.e.getDropList().leftClick(x, y);
 			Initialize.e.getCreateChipUI().leftClick(x, y);
 			Initialize.e.getChangeNodesUI().leftClick(x, y);
+			Initialize.e.getPrompt().leftClick(x, y);
 		}
 		
 		//Right Click
@@ -54,6 +56,11 @@ public class MainMouseHandler extends MouseAdapter {
 			Wire.rightClick(x, y);
 			Node.rightClick(x, y, Node.getNodeClick(x, y));
 			Chip.rightClick(x, y);
+		}
+		
+		//Middle Click
+		if(e.getButton() == MouseEvent.BUTTON2) {
+			Initialize.e.getChangeNodesUI().middleClick(x, y);
 		}
 		
 		Initialize.e.update();
@@ -79,9 +86,6 @@ public class MainMouseHandler extends MouseAdapter {
 	
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		//int x = e.getX();
-		//int y = e.getY();
-		
 		Chip.mouseReleased();
 	}
 	

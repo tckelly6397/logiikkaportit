@@ -16,6 +16,12 @@ public class ChipButton extends Button {
 	public void leftClick(int x, int y) {
 		if(getCollision(x, y)) {
 			Chip newC = Initialize.e.createChip(c.getAllNodes(), c.getInputNodes(), c.getOutputNodes(), c.getLabel(), c.getColor());
+			if(newC == null)
+				return;
+			
+			Rectangle box = Initialize.e.getBox();
+			newC.setX((box.getX() + box.getWIDTH()) / 2);
+			newC.setY((box.getY() + box.getHEIGHT()) / 2);
 			Initialize.e.addChip(newC);
 			Initialize.e.getPowerThread().addNext(newC);
 			newC.update();

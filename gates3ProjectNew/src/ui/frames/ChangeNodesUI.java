@@ -53,4 +53,10 @@ public class ChangeNodesUI {
 		for(Button b : buttons)
 			b.leftClick(x, y);
 	}
+	
+	public void middleClick(int x, int y) {
+		for(Button b : buttons) 
+			if(b.getClass() == PlusButton.class)
+				((PlusButton)b).middleClick(x, y);
+	}
 }
