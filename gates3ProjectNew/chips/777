@@ -1,0 +1,4 @@
+{Label:777, Color:[25, 11, 178], InputIds:[0, 1], OutputIds:[2]}
+{Label:node, id:0, inputIds:[], outputIds:[], powered:false, ngId:-1, isClock:false}
+{Label:node, id:1, inputIds:[], outputIds:[], powered:false, ngId:-1, isClock:true}
+{Label:node, id:2, inputIds:[], outputIds:[], powered:false, ngId:-1, isClock:false}
