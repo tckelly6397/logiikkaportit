@@ -6,7 +6,7 @@ import components.Node;
 import gates3Project.Environment;
 import gates3Project.Initialize;
 
-public class NotGateChip extends Chip{
+public class NotGateChip extends Chip {
 	
 	public NotGateChip(int x, int y, Color c, Environment e, String label) {
 		super(x, y, c, e, label);

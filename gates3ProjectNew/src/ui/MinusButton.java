@@ -35,7 +35,7 @@ public class MinusButton extends Button {
 	@Override
 	public void leftClick(int x, int y) {
 		if(getCollision(x, y)) {
-			if(nodes.size() > 1) {
+			if(nodes.size() > 0) {
 				Node n = nodes.get(nodes.size() - 1);
 				n.destroy(isInput, !isInput);
 			}

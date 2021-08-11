@@ -27,6 +27,7 @@ public class CreateChipUI {
 		int btnWidth = 140;
 		btn = new Button(new Spot(x + WIDTH - btnWidth, y), btnWidth, HEIGHT, new Color(20, 180, 20), "CREATE");
 		btn.setCommand(new CreateCommand());
+		btn.setBorderRadius(15);
 		
 		nameLabel = new InputLabel(x + 8, y - 8, "", 200, HEIGHT, Color.WHITE, -1, 10, true, true);
 		redLabel = new InputLabel(x + nameLabel.getWIDTH(), y - 8, "" + (int)(Math.random() * 255), 200, HEIGHT, Color.RED, -1, 3, false, true);
@@ -51,7 +52,7 @@ public class CreateChipUI {
 	}
 	
 	public void setButtonLocation() {
-		btn.setLocation(new Spot(location.getX() + WIDTH - btn.getWIDTH(), location.getY() - btn.getHEIGHT()));
+		btn.setLocation(new Spot(location.getX() + WIDTH - btn.getWIDTH() + 10, location.getY() - btn.getHEIGHT()));
 		
 		redLabel.setX(location.getXAsInt() + nameLabel.getWIDTH() + 20);
 		greenLabel.setX(redLabel.getLocation().getXAsInt() + redLabel.getWIDTH() + 10);

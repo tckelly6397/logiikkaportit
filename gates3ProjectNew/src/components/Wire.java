@@ -6,6 +6,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
+import colliders.Collider;
+import colliders.WireCollider;
 import gates3Project.Environment;
 import gates3Project.Initialize;
 import utils.Spot;
@@ -31,6 +33,8 @@ public class Wire extends Component {
 		this.spots.add(inputNode.getSpot());
 		this.selected = true;
 		this.e = e;
+		setCollider(new WireCollider(this, spots));
+		Collider.registerCollider(getCollider());
 	}
 	
 	public void draw(Graphics g) {
@@ -95,55 +99,6 @@ public class Wire extends Component {
 		}
 	}
 	
-	@Override
-	public Boolean getCollision(int x, int y) {
-		y -= 32;
-		x -= 8;
-		
-		for(int i = 0; i < spots.size() - 1; i++) {
-			int x1 = spots.get(i).getXAsInt();
-			int y1 = spots.get(i ).getYAsInt();
-			int x2 = spots.get(i + 1).getXAsInt();
-			int y2 = spots.get(i + 1).getYAsInt();
-			
-			//The x1 or y1 has to be smaller than there counter parts
-			if(x2 < x1) {
-				int temp = x2;
-				x2 = x1;
-				x1 = temp;
-			}
-			
-			if(y2 < y1) {
-				int temp = y2;
-				y2 = y1;
-				y1 = temp;
-			}
-			
-			if(x1 == x2) {
-				x1 -= 7;
-				x2 += 7;
-			}
-			
-			if(y1 == y2) {
-				y1 -= 7;
-				y2 += 7;
-			}
-			
-			//Allows to not detect collision if on node
-			if(i == 0)
-				x1 += 12;
-			
-			if(i + 1 == spots.size() - 1)
-				x2 -= 9;
-			
-			if(x > x1 && x < x2 && y > y1 && y < y2) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
-	
 	public static void updateTempSpot(int x, int y) {
 		ArrayList<Wire> wires = Initialize.e.getWires();
 		
@@ -154,39 +109,46 @@ public class Wire extends Component {
 			Spot tempSpot = null;
 
 			if(w.isxAxis())
-				tempSpot = new Spot(x - 8, w.getSpots().get(w.getSpots().size() - 1).getYAsInt());
+				tempSpot = new Spot(x - 8 - (Initialize.e.getOffsetX()), w.getSpots().get(w.getSpots().size() - 1).getYAsInt());
 			else
-				tempSpot = new Spot(w.getSpots().get(w.getSpots().size() - 1).getXAsInt(), y - 27);
+				tempSpot = new Spot(w.getSpots().get(w.getSpots().size() - 1).getXAsInt(), y - 27 - (Initialize.e.getOffsetY()));
 			
 			w.setTempSpot(tempSpot);
 		}
 	}
 	
-	public static void leftClick(int x, int y) {
-		ArrayList<Wire> wires = Initialize.e.getWires();
+	@Override
+	public void leftClick(int x, int y) {
+		destroy();
 		
-		Wire wire = null;
-		for(Wire w : wires) {
-			if(w.getCollision(x, y)) {
-				wire = w;
-				break;
-			}
-		}
-		
-		if(wire != null) {
-			wire.destroy();
-		}
 	}
-	
-	public static void rightClick(int x, int y) {
-		ArrayList<Wire> wires = Initialize.e.getWires();
+
+	@Override
+	public void rightClick(int x, int y) {
+		//Taken care of in Collider because this is special
+	}
+
+	@Override
+	public void middleClick(int x, int y) {
+		// TODO Auto-generated method stub
 		
-		for(Wire w : wires) {
-			if(w.isSelected() && w.getTempSpot() != null) {
-				w.addSpot(new Spot(w.getTempSpot().getXAsInt(), w.getTempSpot().getYAsInt()));
-				w.switchAxis();
-			}
-		}
+	}
+
+	@Override
+	public void drag(int x, int y) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseReleased(int x, int y) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(int x, int y) {
+		// TODO Auto-generated method stub
 		
 	}
 	
@@ -204,6 +166,8 @@ public class Wire extends Component {
 		outputNode.removeInputWire(this);
 		
 		this.e.getWires().remove(this);
+		
+		Collider.unRegisterCollider(getCollider());
 	}
 	
 	public ArrayList<Spot> getSpots() {

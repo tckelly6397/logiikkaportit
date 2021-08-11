@@ -6,6 +6,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
+import colliders.Collider;
+import colliders.RectangleCollider;
 import components.Component;
 import components.Node;
 import gates3Project.Environment;
@@ -41,6 +43,8 @@ public abstract class Chip extends Component {
 		
 		setHeight();
 		setNodeLocations();
+		setCollider(new RectangleCollider(this, location, WIDTH, HEIGHT));
+		Collider.registerCollider(getCollider());
 	}
 	
 	public Chip(Chip c) {
@@ -51,6 +55,8 @@ public abstract class Chip extends Component {
 		
 		setHeight();
 		setNodeLocations();
+		setCollider(new RectangleCollider(this, location, WIDTH, HEIGHT));
+		Collider.registerCollider(getCollider());
 	}
 	
 	public void draw(Graphics g) {
@@ -94,6 +100,9 @@ public abstract class Chip extends Component {
 			nodeCount = outputNodes.size();
 		
 		HEIGHT = nodeCount * (20 + 5);
+		
+		if(getCollider() != null)
+			((RectangleCollider)(getCollider())).setHeight(HEIGHT);
 	}
 	
 	public void setNodeLocations() {
@@ -115,47 +124,30 @@ public abstract class Chip extends Component {
 		}
 	}
 	
-	public Boolean getCollision(int x, int y) {
-		x -= 10;
-		y -= 30;
+	@Override
+	public void leftClick(int x, int y) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void rightClick(int x, int y) {
+		// TODO Auto-generated method stub
 		
-		int x1 = location.getXAsInt();
-		int y1 = location.getYAsInt();
-		int x2 = location.getXAsInt() + WIDTH;
-		int y2 = location.getYAsInt() + HEIGHT;
+	}
+
+	@Override
+	public void middleClick(int x, int y) {
+		// TODO Auto-generated method stub
 		
-		if(x > x1 && x < x2 && y > y1 && y < y2)
-			return true;
-		
-		return false;
 	}
-	
-	public static void drag(int x, int y) {
-		for(Chip c : Initialize.e.getChips()) {
-			if(c.getSelected()) {
-				c.translateX(x - c.getX() + c.getOffsetX());
-				c.translateY(y - c.getY() + c.getOffsetY());
-				
-				break;
-			}
-		}
+
+	@Override
+	public void drag(int x, int y) {
+		//Handled inside of the Collider
 	}
-	
-	public static void rightClick(int x, int y) {
-	}
-	
-	public static void pressed(int x, int y) {
-		for(Chip c : Initialize.e.getChips()) {
-			if(c.getCollision(x, y)) {
-				c.setSelected(true);
-				c.setOffsetX(c.getX() - x);
-				c.setOffsetY(c.getY() - y);
-				break;
-			}		
-		}
-	}
-	
-	public static void mouseReleased() {
+
+	@Override
+	public void mouseReleased(int x, int y) {
 		//ArrayList for concurrent modification
 		ArrayList<Chip> destroyThese = new ArrayList<>();
 		
@@ -171,12 +163,21 @@ public abstract class Chip extends Component {
 		for(int i = destroyThese.size() - 1; i >= 0; i--)
 			destroyThese.get(i).destroy();
 	}
+
+	@Override
+	public void mousePressed(int x, int y) {
+		setSelected(true);
+		setOffsetX(getX() - x);
+		setOffsetY(getY() - y);
+	}
 	
+	//This should be changed to use Rectangle(Box) getCollision function
+	//I'm just too lazy right now because its late
 	public boolean isInPlay() {
-		int x1 = location.getXAsInt();
-		int y1 = location.getYAsInt();
-		int x2 = location.getXAsInt() + WIDTH;
-		int y2 = location.getYAsInt() + HEIGHT;
+		int x1 = location.getXAsInt() + (Initialize.e.getOffsetX());;
+		int y1 = location.getYAsInt() + (Initialize.e.getOffsetY());;
+		int x2 = location.getXAsInt() + WIDTH + (Initialize.e.getOffsetX());;
+		int y2 = location.getYAsInt() + HEIGHT + (Initialize.e.getOffsetY());;
 		
 		Rectangle box = Initialize.e.getBox();
 		
@@ -197,6 +198,8 @@ public abstract class Chip extends Component {
 		}
 		
 		e.getChips().remove(this);
+		
+		Collider.unRegisterCollider(getCollider());
 	}
 	
 	public ArrayList<Node> getInputNodes() {
@@ -232,11 +235,13 @@ public abstract class Chip extends Component {
 	public void setX(int x) {
 		this.location.setX(x);
 		setNodeLocations();
+		((RectangleCollider)(getCollider())).setLocation(location);
 	}
 	
 	public void translateX(int x) {
 		this.location.setX(this.location.getX() + x);
 		setNodeLocations();
+		((RectangleCollider)(getCollider())).setLocation(location);
 	}
 
 	public int getY() {
@@ -246,11 +251,13 @@ public abstract class Chip extends Component {
 	public void setY(int y) {
 		this.location.setY(y);
 		setNodeLocations();
+		((RectangleCollider)(getCollider())).setLocation(location);
 	}
 	
 	public void translateY(int y) {
 		this.location.setY(this.location.getY() + y);
 		setNodeLocations();
+		((RectangleCollider)(getCollider())).setLocation(location);
 	}
 
 	public Color getColor() {
@@ -311,5 +318,11 @@ public abstract class Chip extends Component {
 	
 	public void addAAllNode(Node n) {
 		this.allNodes.add(n);
+	}
+	
+	@Override
+	public String toString() {
+		return "Chip [location=" + location + ", color=" + color + ", selected=" + selected + ", label=" + label
+				+ ", offsetX=" + offsetX + ", offsetY=" + offsetY + ", WIDTH=" + WIDTH + ", HEIGHT=" + HEIGHT + "]";
 	}
 }

@@ -5,10 +5,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
 
+import javax.swing.SwingUtilities;
+
+import colliders.Collider;
 import components.Component;
 import components.Node;
 import components.Wire;
-import components.chips.Chip;
 import gates3Project.Initialize;
 
 public class MainMouseHandler extends MouseAdapter {
@@ -43,19 +45,17 @@ public class MainMouseHandler extends MouseAdapter {
 		
 		//Left Click
 		if(e.getButton() == MouseEvent.BUTTON1) {
-			Wire.leftClick(x, y);
-			Node.leftClick(x, y, Node.getNodeClick(x, y));
 			Initialize.e.getDropList().leftClick(x, y);
 			Initialize.e.getCreateChipUI().leftClick(x, y);
 			Initialize.e.getChangeNodesUI().leftClick(x, y);
 			Initialize.e.getPrompt().leftClick(x, y);
+			
+			Collider.leftClick(x, y);
 		}
 		
 		//Right Click
 		if(e.getButton() == MouseEvent.BUTTON3) {
-			Wire.rightClick(x, y);
-			Node.rightClick(x, y, Node.getNodeClick(x, y));
-			Chip.rightClick(x, y);
+			Collider.rightClick(x, y);
 		}
 		
 		//Middle Click
@@ -71,7 +71,14 @@ public class MainMouseHandler extends MouseAdapter {
 		int x = e.getX();
 		int y = e.getY();
 		
-		Chip.drag(x, y);
+		//Left Click
+		if(SwingUtilities.isLeftMouseButton(e))
+			Collider.drag(x, y);
+		
+		//Middle Click
+		if(SwingUtilities.isMiddleMouseButton(e)) {
+			Initialize.e.getBox().middleClickDrag(x, y);
+		}
 		
 		Initialize.e.update();
 	}
@@ -81,12 +88,28 @@ public class MainMouseHandler extends MouseAdapter {
 		int x = e.getX();
 		int y = e.getY();
 		
-		Chip.pressed(x, y);
+		if(SwingUtilities.isLeftMouseButton(e))
+			Collider.mousePressed(x, y);
+		
+		//Middle Click
+		if(SwingUtilities.isMiddleMouseButton(e)) {
+			Initialize.e.getBox().middlePressed(x, y);
+		}
 	}
 	
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		Chip.mouseReleased();
+		//Chip.mouseReleased();
+		int x = e.getX();
+		int y = e.getY();
+		
+		if(SwingUtilities.isLeftMouseButton(e))
+			Collider.mouseReleased(x, y);
+		
+		//Middle Click
+		if(SwingUtilities.isMiddleMouseButton(e)) {
+			Initialize.e.getBox().middleReleased(x, y);
+		}
 	}
 	
 	@Override

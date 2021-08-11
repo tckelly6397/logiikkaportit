@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
+import colliders.CircleCollider;
+import colliders.Collider;
 import components.chips.Chip;
 import components.chips.NotGateChip;
 import gates3Project.Environment;
@@ -28,6 +30,8 @@ public class Node extends Component {
 		this.size = size;
 		this.clickable = clickable;
 		this.e = e;
+		setCollider(new CircleCollider(this, spot, size));
+		Collider.registerCollider(getCollider());
 	}
 	
 	public Node(int x, int y, int size, boolean clickable, Chip c, Environment e) {
@@ -37,6 +41,8 @@ public class Node extends Component {
 		this.clickable = clickable;
 		this.c = c;
 		this.e = e;
+		setCollider(new CircleCollider(this, spot, size));
+		Collider.registerCollider(getCollider());
 	}
 	
 	public Node(int x, int y, int size, boolean powered, boolean clickable, Environment e) {
@@ -45,6 +51,8 @@ public class Node extends Component {
 		this.size = size;
 		this.clickable = clickable;
 		this.e = e;
+		setCollider(new CircleCollider(this, spot, size));
+		Collider.registerCollider(getCollider());
 	}
 	
 	public Node(Node n) {
@@ -54,6 +62,8 @@ public class Node extends Component {
 		this.e = n.getEnvironment();	
 		this.powered = false;
 		this.clock = n.isClock();
+		setCollider(new CircleCollider(this, spot, size));
+		Collider.registerCollider(getCollider());
 	}
 	
 	public void draw(Graphics g) {
@@ -82,6 +92,7 @@ public class Node extends Component {
 			powered = false;
 	}
 	
+	/*
 	public Boolean getCollision(int x, int y) {
 		int distN = (int)Math.abs(Math.sqrt(Math.pow(spot.getXAsInt() - x + 8, 2) + Math.pow(spot.getYAsInt() - y + 30, 2)));
 		if(distN < size - 6)
@@ -89,6 +100,7 @@ public class Node extends Component {
 		
 	    return false;
 	}
+	*/
 	
 	public static ArrayList<Node> getAllNodes() {
 		ArrayList<Node> nodes = new ArrayList<>(Initialize.e.getInputNodes());
@@ -100,6 +112,7 @@ public class Node extends Component {
 		return nodes;
 	}
 	
+	/*
 	public static Node getNodeClick(int x, int y) {
 		Node node = null;
 		
@@ -112,50 +125,48 @@ public class Node extends Component {
 		
 		return node;
 	}
+	*/
 	
-	public static void leftClick(int x, int y, Node node) {
-		if(node != null) {
-				if(node.isClickable()) {
-					node.switchPowered();
-					node.getEnvironment().getPowerThread().addNext(node);
+	@Override
+	public void leftClick(int x, int y) {
+		if(clickable) {
+			switchPowered();
+			e.getPowerThread().addNext(this);
+		}
+		
+		//Connect node
+		for(Wire w : Initialize.e.getWires()) {
+			if(w.isSelected()) {
+				if(w.getSpots().size() == 1) {
+					int dist = spot.getXAsInt() - w.getSpots().get(0).getXAsInt();
+					Spot s1 = new Spot(spot.getXAsInt() - (dist / 2), w.getSpots().get(0).getYAsInt());
+					Spot s2 = new Spot(spot.getXAsInt() - (dist / 2), spot.getYAsInt());
+							
+					w.addSpot(s1);
+					w.addSpot(s2);
+				}
+				else {
+					Spot last = w.getSpots().get(w.getSpots().size() - 1);
+					last = new Spot(last.getX(), spot.getYAsInt());
+					
+					if(!w.isxAxis())
+						w.getSpots().add(new Spot(last.getX(), last.getY()));
+					
+					w.getSpots().get(w.getSpots().size() - 1).setSpot(last);
 				}
 				
-				//Connect node
-				for(Wire w : Initialize.e.getWires()) {
-					if(w.isSelected()) {
-						if(w.getSpots().size() == 1) {
-							int dist = node.getSpot().getXAsInt() - w.getSpots().get(0).getXAsInt();
-							Spot s1 = new Spot(node.getSpot().getXAsInt() - (dist / 2), w.getSpots().get(0).getYAsInt());
-							Spot s2 = new Spot(node.getSpot().getXAsInt() - (dist / 2), node.getSpot().getYAsInt());
-									
-							w.addSpot(s1);
-							w.addSpot(s2);
-						}
-						else {
-							Spot last = w.getSpots().get(w.getSpots().size() - 1);
-							last = new Spot(last.getX(), node.getSpot().getYAsInt());
-							
-							if(!w.isxAxis())
-								w.getSpots().add(new Spot(last.getX(), last.getY()));
-							
-							w.getSpots().get(w.getSpots().size() - 1).setSpot(last);
-						}
-						
-						w.getSpots().add(node.getSpot());
-						w.setTempSpot(null);
-						w.setSelected(false);
-						node.addInputWire(w);
-						w.setOutputNode(node);
-						w.update();
-					}
-				}
-		}
+				w.getSpots().add(spot);
+				w.setTempSpot(null);
+				w.setSelected(false);
+				addInputWire(w);
+				w.setOutputNode(this);
+				w.update();
+			}
+		}	
 	}
-	
-	public static void rightClick(int x, int y, Node node) {
-		if(node == null)
-			return;
-		
+
+	@Override
+	public void rightClick(int x, int y) {		
 		Boolean goOn = true;
 		
 		for(Wire w : Initialize.e.getWires()) {
@@ -165,11 +176,35 @@ public class Node extends Component {
 		}
 		
 		if(goOn) {
-			Wire w = new Wire(node, node.getEnvironment());
+			Wire w = new Wire(this, e);
 			w.setSelected(true);
-			node.getWires().add(w);
+			wires.add(w);
 			Initialize.e.getWires().add(w);
 		}
+		
+	}
+
+	@Override
+	public void middleClick(int x, int y) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void drag(int x, int y) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseReleased(int x, int y) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(int x, int y) {
+		// TODO Auto-generated method stub
 	}
 	
 	public void destroy(Boolean isInput, Boolean isOutput) {
@@ -186,6 +221,8 @@ public class Node extends Component {
 		
 		if(isOutput)
 			Initialize.e.getOutputNodes().remove(this);
+		
+		Collider.unRegisterCollider(getCollider());
 	}
 
 	public Spot getSpot() {
@@ -194,6 +231,7 @@ public class Node extends Component {
 
 	public void setSpot(Spot spot) {
 		this.spot = spot;
+		((CircleCollider)(getCollider())).setLocation(spot);;
 	}
 
 	public int getSize() {
@@ -202,6 +240,7 @@ public class Node extends Component {
 
 	public void setSize(int size) {
 		this.size = size;
+		((CircleCollider)(getCollider())).setSize(size);
 	}
 
 	public boolean isPowered() {

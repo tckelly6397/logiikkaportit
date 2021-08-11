@@ -155,8 +155,11 @@ public class BasicChip extends Chip {
 			}
 		}
 		
-		inputIds = inputIds.substring(0, inputIds.length() - 2);
-		outputIds = outputIds.substring(0, outputIds.length() - 2);
+		if(inputIds.length() > 0)
+			inputIds = inputIds.substring(0, inputIds.length() - 2);
+		
+		if(outputIds.length() > 0)
+			outputIds = outputIds.substring(0, outputIds.length() - 2);
 		
 		//Write to a file
 	    BufferedWriter writer;

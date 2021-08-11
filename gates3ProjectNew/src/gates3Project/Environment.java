@@ -43,7 +43,31 @@ public class Environment extends JPanel {
 	private Rectangle box;
 	private Prompt prompt;
 	
+	private int offsetX = 0;
+	private int offsetY = 0;
+	
 	public void paintComponent(Graphics g) {
+		box.fillDraw(g);
+		
+		//Draw dotted lines
+		Graphics2D g2d = (Graphics2D)g;
+		
+		g2d.setColor(new Color(60, 60, 60));
+		//These dash lines make me sick
+		//Stroke dashed = new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{10}, 0);
+		//g2d.setStroke(dashed);
+		
+		g2d.translate(offsetX, offsetY);
+		g2d.drawLine(-offsetX, box.getLocation().getYAsInt() + (box.getHEIGHT() / 2), frame.getWidth() - offsetX, box.getLocation().getYAsInt() + (box.getHEIGHT() / 2));
+		g2d.translate(-offsetX, -offsetY);
+		
+		g2d.translate(offsetX, offsetY);
+		g2d.drawLine(frame.getWidth() / 2, -offsetY, frame.getWidth() / 2, frame.getHeight() - offsetY);
+		g2d.translate(-offsetX, -offsetY);
+		g2d.setStroke(new BasicStroke(8, 1, 1));
+		//
+		
+		g.translate(offsetX, offsetY);
 		for(Wire w : wires)
 			w.draw(g);
 		
@@ -54,19 +78,22 @@ public class Environment extends JPanel {
 		
 		for(Chip c : chips)
 			c.draw(g);
+		g.translate(-offsetX, -offsetY);
 		
 		g.setColor(new Color(80, 80, 80));
-		Graphics2D g2d = (Graphics2D)g;
-		g2d.setStroke(new BasicStroke(8, 1, 1));
 		
-		box.draw(g);
-		
+		g.translate(offsetX, offsetY);
 		for(Node n : outputNodes)
 			n.draw(g);
 		
 		for(Node n : inputNodes)
 			n.draw(g);
+		g.translate(-offsetX, -offsetY);
 		
+		//g2d.scale(.8, .8);
+		
+		box.invertedDraw(g);
+		box.draw(g);
 		dropList.draw(g);
 		createChipUI.draw(g);
 		changeNodesUI.draw(g);
@@ -116,14 +143,14 @@ public class Environment extends JPanel {
 		for(int i = 0; i < inputNodes.size(); i++) {
 			int defSize = 30;
 			int h = (frame.getHeight() / 2) - ((defSize + 20) * i) + ((defSize + 20) * inputNodes.size() / 2) - ((defSize + 20) / 2);
-			inputNodes.get(i).setSpot(new Spot(60, h));
+			inputNodes.get(i).setSpot(new Spot(95 + (defSize / 2), h));
 		}
 			
 		//Update output nodes
 		for(int i = 0; i < outputNodes.size(); i++) {
 			int defSize = 30;
 			int h = (frame.getHeight() / 2) - ((defSize + 20) * i) + ((defSize + 20) * outputNodes.size() / 2) - ((defSize + 20) / 2);
-			outputNodes.get(i).setSpot(new Spot(frame.getWidth() - 70, h));
+			outputNodes.get(i).setSpot(new Spot(frame.getWidth() - 105 - (defSize / 2), h));
 		}
 		
 		//Update dropList
@@ -364,6 +391,30 @@ public class Environment extends JPanel {
 
 	public void setPrompt(Prompt prompt) {
 		this.prompt = prompt;
+	}
+
+	public int getOffsetX() {
+		return offsetX;
+	}
+
+	public void setOffsetX(int offsetX) {
+		this.offsetX = offsetX;
+	}
+
+	public int getOffsetY() {
+		return offsetY;
+	}
+
+	public void setOffsetY(int offsetY) {
+		this.offsetY = offsetY;
+	}
+	
+	public void translateOffsetX(int x) {
+		this.offsetX += x;
+	}
+	
+	public void translateOffsetY(int y) {
+		this.offsetY += y;
 	}
 
 	@Override
