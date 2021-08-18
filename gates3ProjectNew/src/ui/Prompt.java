@@ -10,8 +10,8 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import gates3Project.Initialize;
-import utils.ClosePromptCommand;
 import utils.Spot;
+import utils.commands.ClosePromptCommand;
 
 public class Prompt {
 	private boolean shown;

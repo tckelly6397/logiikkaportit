@@ -43,6 +43,9 @@ public class Rectangle {
 	}
 	
 	public void invertedDraw(Graphics g) {
+		if(Initialize.e == null)
+			return;
+		
 		g.setColor(new Color(50, 50, 50));
 		g.fillRect(0, 0, Initialize.e.getFrame().getWidth(), location.getYAsInt());
 		g.fillRect(0, location.getYAsInt(), location.getXAsInt(), HEIGHT);

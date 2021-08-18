@@ -14,6 +14,7 @@ public class Button {
 	private int HEIGHT;
 	private Boolean hovered;
 	private Color c;
+	private Color borderC;
 	private String label;
 	private Command command;
 	private int borderRadius;
@@ -27,6 +28,7 @@ public class Button {
 		this.hovered = false;
 		this.label = label;
 		this.borderRadius = 0;
+		this.borderC = c;
 	}
 	
 	public void draw(Graphics g) {
@@ -40,6 +42,13 @@ public class Button {
 		}
 		
 		g.fillRoundRect(x, y, WIDTH, HEIGHT, borderRadius, borderRadius);
+		
+		//draw rectangle around
+		java.awt.Graphics2D g2d = (java.awt.Graphics2D) g.create();
+		g2d.setStroke(new java.awt.BasicStroke(1));
+		g2d.setColor(borderC);
+		g2d.drawRoundRect(x, y, WIDTH, HEIGHT, borderRadius, borderRadius);
+		//
 		
 		g.setColor(Color.BLACK);
 		if(getHovered()) {
@@ -129,6 +138,22 @@ public class Button {
 
 	public int getBorderRadius() {
 		return borderRadius;
+	}
+
+	public Color getColor() {
+		return c;
+	}
+
+	public void setColor(Color c) {
+		this.c = c;
+	}
+
+	public Color getBorderC() {
+		return borderC;
+	}
+
+	public void setBorderC(Color borderC) {
+		this.borderC = borderC;
 	}
 
 	public void setBorderRadius(int borderRadius) {

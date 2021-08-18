@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import colliders.CircleCollider;
 import colliders.Collider;
 import components.chips.Chip;
+import components.chips.LedSwitch;
 import components.chips.NotGateChip;
 import gates3Project.Environment;
 import gates3Project.Initialize;
@@ -83,6 +84,10 @@ public class Node extends Component {
 			e.getPowerThread().addNext(c);
 		}
 		
+		if(c != null && c instanceof LedSwitch) {
+			e.getPowerThread().addNext(c);
+		}
+		
 		for(Wire w : wires) {
 			w.setPowered(powered);
 			e.getPowerThread().addNext(w);
@@ -91,16 +96,6 @@ public class Node extends Component {
 		if(c != null && inputWires.isEmpty())
 			powered = false;
 	}
-	
-	/*
-	public Boolean getCollision(int x, int y) {
-		int distN = (int)Math.abs(Math.sqrt(Math.pow(spot.getXAsInt() - x + 8, 2) + Math.pow(spot.getYAsInt() - y + 30, 2)));
-		if(distN < size - 6)
-			return true;
-		
-	    return false;
-	}
-	*/
 	
 	public static ArrayList<Node> getAllNodes() {
 		ArrayList<Node> nodes = new ArrayList<>(Initialize.e.getInputNodes());
@@ -111,21 +106,6 @@ public class Node extends Component {
 		
 		return nodes;
 	}
-	
-	/*
-	public static Node getNodeClick(int x, int y) {
-		Node node = null;
-		
-		for(Node n : getAllNodes()) { 
-			if(n.getCollision(x, y)) {
-				node = n;
-				break;
-			}
-		}
-		
-		return node;
-	}
-	*/
 	
 	@Override
 	public void leftClick(int x, int y) {

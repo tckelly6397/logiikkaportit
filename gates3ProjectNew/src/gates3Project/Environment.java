@@ -103,10 +103,6 @@ public class Environment extends JPanel {
 	public Environment(int WIDTH, int HEIGHT) {
 		frame.setBackground(new Color(50, 50, 50));
 	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    frame.addMouseListener(mouseHandler);
-	    frame.addMouseMotionListener(mouseHandler);
-	    frame.addMouseWheelListener(mouseHandler);
-	    frame.addKeyListener(keyHandler);
 	    frame.setSize(WIDTH, HEIGHT);
 	    frame.setVisible(true);  
 	    frame.add(this);
@@ -119,6 +115,13 @@ public class Environment extends JPanel {
 	    NodeClockThread nct = new NodeClockThread();
 	    Thread thread = new Thread(nct);
 	    thread.start();
+	}
+	
+	public void addUserInput() {
+		frame.addMouseListener(mouseHandler);
+	    frame.addMouseMotionListener(mouseHandler);
+	    frame.addMouseWheelListener(mouseHandler);
+	    frame.addKeyListener(keyHandler);
 	}
 	
 	public void beginPowerThread() {

@@ -19,6 +19,7 @@ public class MainKeyHandler implements KeyListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		ArrayList<InputLabel> labels = Initialize.e.getCreateChipUI().getLabels();
+		labels.add(Initialize.e.getCreateChipUI().getDropLedUI().getLedMakerUI().getLedNameLabel());
 		
 		if(e.getKeyCode() == KeyEvent.VK_M) {
 			System.out.println(Node.getAllNodes().size());

@@ -1,0 +1,12 @@
+{Label:NATHAN, Color:[109, 77, 174], InputIds:[0, 1, 2, 3, 4], OutputIds:[5]}
+{Label:node, id:0, inputIds:[], outputIds:[], powered:false, ngId:-1, isClock:false}
+{Label:node, id:1, inputIds:[], outputIds:[], powered:false, ngId:-1, isClock:false}
+{Label:node, id:2, inputIds:[], outputIds:[8], powered:false, ngId:-1, isClock:false}
+{Label:node, id:3, inputIds:[], outputIds:[], powered:false, ngId:-1, isClock:false}
+{Label:node, id:4, inputIds:[], outputIds:[], powered:false, ngId:-1, isClock:false}
+{Label:node, id:5, inputIds:[9], outputIds:[], powered:false, ngId:-1, isClock:false}
+{Label:node, id:6, inputIds:[8], outputIds:[], powered:false, ngId:10, isClock:false}
+{Label:node, id:7, inputIds:[], outputIds:[9], powered:false, ngId:-1, isClock:false}
+{Label:wire, id:8, inputIds:[2], outputIds:[6], powered:false, ngId:-1, isClock:false}
+{Label:wire, id:9, inputIds:[7], outputIds:[5], powered:false, ngId:-1, isClock:false}
+{Label:noteGate, id:10, inputIds:[6], outputIds:[7], powered:false, ngId:-1, isClock:false}

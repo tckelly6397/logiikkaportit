@@ -1,0 +1,7 @@
+{Label:TEST2, Color:[33, 150, 172], InputIds:[0, 1, 2, 3, 4], OutputIds:[5]}
+{Label:node, id:0, inputIds:[], outputIds:[], powered:false, ngId:-1, isClock:false}
+{Label:node, id:1, inputIds:[], outputIds:[], powered:false, ngId:-1, isClock:false}
+{Label:node, id:2, inputIds:[], outputIds:[], powered:false, ngId:-1, isClock:false}
+{Label:node, id:3, inputIds:[], outputIds:[], powered:false, ngId:-1, isClock:false}
+{Label:node, id:4, inputIds:[], outputIds:[], powered:false, ngId:-1, isClock:false}
+{Label:node, id:5, inputIds:[], outputIds:[], powered:false, ngId:-1, isClock:false}

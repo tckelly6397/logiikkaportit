@@ -5,9 +5,10 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 
 import ui.Button;
+import ui.DropLedUI;
 import ui.InputLabel;
-import utils.CreateCommand;
 import utils.Spot;
+import utils.commands.CreateCommand;
 
 public class CreateChipUI {
 	private Spot location;
@@ -16,6 +17,7 @@ public class CreateChipUI {
 	private InputLabel redLabel;
 	private InputLabel greenLabel;
 	private InputLabel blueLabel;
+	private DropLedUI dropLedUI;
 	private int WIDTH;
 	private int HEIGHT;
 	
@@ -33,6 +35,7 @@ public class CreateChipUI {
 		redLabel = new InputLabel(x + nameLabel.getWIDTH(), y - 8, "" + (int)(Math.random() * 255), 200, HEIGHT, Color.RED, -1, 3, false, true);
 		greenLabel = new InputLabel(redLabel.getLocation().getXAsInt() + redLabel.getWIDTH(), y - 8, "" + (int)(Math.random() * 255), 200, HEIGHT, Color.GREEN, -1, 3, false, true);
 		blueLabel = new InputLabel(greenLabel.getLocation().getXAsInt() + greenLabel.getWIDTH(), y - 8, "" + (int)(Math.random() * 255), 200, HEIGHT, Color.BLUE, -1, 3, false, true);
+		dropLedUI = new DropLedUI(blueLabel.getLocation().getXAsInt() + greenLabel.getWIDTH(), y - 30);
 	}
 	
 	public void draw(Graphics g) {
@@ -42,6 +45,7 @@ public class CreateChipUI {
 		redLabel.draw(g);
 		greenLabel.draw(g);
 		blueLabel.draw(g);
+		dropLedUI.draw(g);
 		
 		g.setColor(getColor());
 		g.fillRect(blueLabel.getLocation().getXAsInt() + blueLabel.getWIDTH() + 2, location.getYAsInt() - 6 - HEIGHT, 40, 40);
@@ -57,22 +61,24 @@ public class CreateChipUI {
 		redLabel.setX(location.getXAsInt() + nameLabel.getWIDTH() + 20);
 		greenLabel.setX(redLabel.getLocation().getXAsInt() + redLabel.getWIDTH() + 10);
 		blueLabel.setX(greenLabel.getLocation().getXAsInt() + greenLabel.getWIDTH() + 10);
+		dropLedUI.setX(blueLabel.getLocation().getXAsInt() + greenLabel.getWIDTH() + 50);
 	}
 	
 	public void leftClick(int x, int y) {
 		btn.leftClick(x, y);
+		dropLedUI.leftClick(x, y);
 		
 		for(InputLabel il : getLabels()) {
 			if(il.leftClick(x, y))
 				continue;
 			
 			il.setSelected(false);
-		}
-				
+		}			
 	}
 	
 	public void executeHovered(int x, int y) {
 		btn.executeHovered(x, y);
+		dropLedUI.executeHovered(x, y);
 		
 		for(InputLabel il : getLabels())
 			il.executeHovered(x, y);
@@ -140,6 +146,14 @@ public class CreateChipUI {
 		labels.add(blueLabel);
 		
 		return labels;
+	}
+
+	public DropLedUI getDropLedUI() {
+		return dropLedUI;
+	}
+
+	public void setDropLedUI(DropLedUI dropLedUI) {
+		this.dropLedUI = dropLedUI;
 	}
 }
 

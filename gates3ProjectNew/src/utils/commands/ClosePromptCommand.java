@@ -1,6 +1,7 @@
-package utils;
+package utils.commands;
 
 import gates3Project.Initialize;
+import utils.Command;
 
 public class ClosePromptCommand implements Command {
 

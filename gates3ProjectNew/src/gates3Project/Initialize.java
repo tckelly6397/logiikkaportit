@@ -20,13 +20,14 @@ public class Initialize {
 		e.setDropList(new DropList(200, 80));
 		e.setCreateChipUI(new CreateChipUI(60, 110, 600, 34));
 		e.setChangeNodesUI(new ChangeNodesUI());
+		Initialize.e.update();
 		
 		NotGateChip ch = new NotGateChip(400, 200, Color.GREEN, Initialize.e, "NOT");
 		ch.addInput(new Node(0, 0, 20, false, ch, Initialize.e));
 	    ch.addOutput(new Node(0, 0, 20, false, Initialize.e));
-
-		e.getDropList().getButtons().add(new ChipButton(new Spot(0, 0), ch));
 	    
+		e.getDropList().getButtons().add(new ChipButton(new Spot(0, 0), ch));
+		
 	    int defSize = 30;
 	    //Setup input nodes
 	    for(int i = 0; i < 5; i++) {
@@ -37,8 +38,9 @@ public class Initialize {
 	    for(int i = 0; i < 1; i++) {
 	    	e.addOutputNode(new Node(0, 0, defSize, false, e));
 	    }
-
 	    
+	    e.update();
+
 		//Loading chips
 		ArrayList<ArrayList<String>> chips = Tools.readChipFiles();
 		
@@ -46,6 +48,9 @@ public class Initialize {
 			Tools.createChip(c);
 		}
 		
+		e.update();
+		
+		e.addUserInput();
 	    e.beginPowerThread();
 	    e.run();
 	}
